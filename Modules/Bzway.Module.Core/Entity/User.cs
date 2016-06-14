@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bzway.Data.Core;
+using System;
 
 namespace Bzway.Module.Core
 {
