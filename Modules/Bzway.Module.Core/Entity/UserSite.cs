@@ -1,4 +1,6 @@
-﻿namespace Bzway.Module.Core
+﻿using Bzway.Data.Core;
+
+namespace Bzway.Module.Core
 {
     public class UserSite : EntityBase, IUserSite
     {

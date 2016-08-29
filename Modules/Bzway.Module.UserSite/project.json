@@ -3,8 +3,7 @@
 
   "dependencies": {
     "Bzway.Data.Core": "1.0.0-*",
-    "Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.0-rc2-final",
-    "NETStandard.Library": "1.5.0-rc2-24027"
+    "NETStandard.Library": "1.6.0"
   },
 
   "frameworks": {
