@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace Bzway.Module.Core
 {
-   
+
     public class AppTenantMiddleware
     {
         private static Dictionary<string, IServiceProvider> serviceProviderCache = new Dictionary<string, IServiceProvider>();
@@ -35,7 +35,7 @@ namespace Bzway.Module.Core
             context.RequestServices = TryGetTenantServiceProvider(appTenant, site);
             return next(context);
         }
-  
+
 
         IServiceProvider TryGetTenantServiceProvider(IAppTenant service, UserSite site)
         {
@@ -47,20 +47,20 @@ namespace Bzway.Module.Core
             {
                 if (!serviceProviderCache.ContainsKey(site.Name))
                 {
-                
+
                     var containerBuilder = new ContainerBuilder();
                     containerBuilder.Populate(gloabServices);
 
                     ServiceCollection services = new ServiceCollection();
                     //for testing
                     services.AddScoped<IUserSite, UserSite>((p) => { return new UserSite() { Host = new string[] { "" }, Name = Guid.NewGuid().ToString("N") }; });
-              
+
                     containerBuilder.Populate(services);
                     //containerBuilder.RegisterModule<DefaultModule>();
                     containerBuilder.RegisterAssemblyModules();
-                   
+
                     var container = containerBuilder.Build();
-                    
+
                     serviceProviderCache.Add(site.Name, container.Resolve<IServiceProvider>());
                 }
                 return serviceProviderCache[site.Name];

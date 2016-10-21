@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Bzway.Module.Core;
+﻿using Bzway.Module.Core;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Bzway.Site.FrontPage.Controllers
 {
