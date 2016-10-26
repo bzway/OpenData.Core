@@ -1,12 +1,6 @@
-using Microsoft.Owin.Logging;
-using Microsoft.Owin.Security.DataHandler;
-using Microsoft.Owin.Security.DataProtection;
-using Microsoft.Owin.Security.Infrastructure;
-using Owin;
 using System;
 using System.Net.Http;
-using System.Net.Security;
-namespace Microsoft.Owin.Security.WeChat
+namespace Microsoft.Owin.Security.Weixin
 {
     public class WeChatAuthenticationMiddleware : AuthenticationMiddleware<WeChatAuthenticationOptions>
     {

@@ -1,8 +1,6 @@
-using Microsoft.Owin.Security.Provider;
-using System;
-namespace Microsoft.Owin.Security.WeChat
+namespace Microsoft.Owin.Security.Weixin
 {
-	public class WeChatReturnEndpointContext : ReturnEndpointContext
+    public class WeChatReturnEndpointContext : ReturnEndpointContext
 	{
 		public WeChatReturnEndpointContext(IOwinContext context, AuthenticationTicket ticket) : base(context, ticket)
 		{

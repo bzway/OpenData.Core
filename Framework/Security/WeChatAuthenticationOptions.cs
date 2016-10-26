@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-namespace Microsoft.Owin.Security.WeChat
+namespace Microsoft.Owin.Security.Weixin
 {
-	public class WeChatAuthenticationOptions : AuthenticationOptions
-	{
+    public class WeChatAuthenticationOptions : AspNetCore.Builder.AuthenticationOptions
+    {
 		public const string AUTHENTICATION_TYPE = "WeChat";
 		public ISecureDataFormat<AuthenticationProperties> StateDataFormat
 		{
