@@ -4,15 +4,7 @@
     "preserveCompilationContext": true
   },
   "dependencies": {
-    "Autofac.Extensions.DependencyInjection": "4.0.0",
-    "Bzway.Common": "1.0.0-*",
-    "Bzway.Data.Core": "1.0.0-*",
-    "Bzway.Data.File": "1.0.0-*",
-    "Bzway.Data.Mongo": "1.0.0-*",
-    "Bzway.Data.Sql": "1.0.0-*",
-    "Bzway.Module.Core": "1.0.0-*",
-    "Bzway.Module.User": "1.0.0-*",
-    "Bzway.Module.UserSite": "1.0.0-*",
+    "Autofac.Extensions.DependencyInjection": "4.0.0", 
     "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": "1.0.0",
@@ -22,7 +14,7 @@
       "type": "build"
     },
     "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0",
-    "Microsoft.AspNetCore.Server.Kestrel": "1.0.0",
+    "Microsoft.AspNetCore.Server.Kestrel": "1.0.1",
     "Microsoft.AspNetCore.StaticFiles": "1.0.0",
     "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0",
     "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
@@ -31,7 +23,7 @@
     "Microsoft.Extensions.Logging": "1.0.0",
     "Microsoft.Extensions.Logging.Console": "1.0.0",
     "Microsoft.Extensions.Logging.Debug": "1.0.0",
-    "Microsoft.NETCore.App": "1.0.0",
+    "Microsoft.NETCore.App": "1.0.1",
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0",
     "Microsoft.VisualStudio.Web.CodeGeneration.Tools": {
       "version": "1.0.0-preview1-final",

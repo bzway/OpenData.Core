@@ -822,8 +822,8 @@ Global
 		{D257D947-F730-4F8E-AB29-54441941D73E} = {B8390689-26E6-46DE-9672-EAFADCD12B88}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		VisualSVNWorkingCopyRoot = .
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35
+		VisualSVNWorkingCopyRoot = .
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = KLS.vsmdi

@@ -2,19 +2,14 @@
   "version": "1.0.0-*",
 
   "dependencies": {
-    "Common": "1.0.0-*",
-    "Core": "1.0.0-*",
-    "File": "1.0.0-*",
     "Microsoft.AspNetCore.Authentication": "1.0.0-rc2-final",
     "Microsoft.AspNetCore.DataProtection.Abstractions": "1.0.0",
     "Microsoft.AspNetCore.Http.Abstractions": "1.0.0",
     "Microsoft.AspNetCore.Identity": "1.0.0-rc2-final",
-    "Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.1",
     "Microsoft.Extensions.Logging.Abstractions": "1.0.0",
-    "Mongo": "1.0.0-*",
-    "Script": "1.0.0-*",
-    "Sql": "1.0.0-*",
-    "Utility": "1.0.0-*",
+    "NETStandard.Library": "1.5.0-rc2-24027",
+    "Newtonsoft.Json": "8.0.3",
+    "System.Net.Security": "4.0.0"
   },
 
   "frameworks": {

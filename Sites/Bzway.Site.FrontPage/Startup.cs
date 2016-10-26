@@ -1,10 +1,26 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using Bzway.Site.FrontPage.Services;
 using Bzway.Module.Core;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Bzway.Site.FrontPage.Data;
+using Bzway.Site.FrontPage.Models;
+using Bzway.Site.FrontPage.Services;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Http;
 
 namespace Bzway.Site.FrontPage
 {
@@ -20,7 +36,7 @@ namespace Bzway.Site.FrontPage
             if (env.IsDevelopment())
             {
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
-                //builder.AddUserSecrets();
+                builder.AddUserSecrets();
 
                 // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
                 builder.AddApplicationInsightsSettings(developerMode: true);

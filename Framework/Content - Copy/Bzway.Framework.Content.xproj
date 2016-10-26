@@ -4,30 +4,16 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
-
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>66203cb5-fb2f-408f-9991-2c8d1363ad6e</ProjectGuid>
-    <RootNamespace>Bzway.Site.FrontPage</RootNamespace>
+    <ProjectGuid>d257d947-f730-4f8e-ab29-54441941d73e</ProjectGuid>
+    <RootNamespace>Bzway.Framework.Content</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
   </PropertyGroup>
-
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
-  <ItemGroup>
-    <DnxInvisibleContent Include="bower.json" />
-    <DnxInvisibleContent Include=".bowerrc" />
-    <DnxInvisibleContent Include="package.json" />
-    <DnxInvisibleContent Include=".npmrc" />
-  </ItemGroup>
-  <ItemGroup>
-    <DnxInvisibleCompile Include="Controllers\FrontPageController.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <DnxInvisibleFolder Include="Areas\" />
-  </ItemGroup>
-  <Import Project="$(VSToolsPath)\DotNet.Web\Microsoft.DotNet.Web.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.targets" Condition="'$(VSToolsPath)' != ''" />
 </Project>

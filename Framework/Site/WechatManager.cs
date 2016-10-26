@@ -1,20 +1,18 @@
-﻿using OpenData.Data.Core;
-using OpenData.Utility;
-using System;
+﻿using System;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using OpenData.Framework.Core.Wechat.Models;
 using System.Collections.Generic;
 using System.Net;
-using System.IO;
-using System.Drawing;
+using System.IO; 
 using System.Security.Cryptography;
-using OpenData.Framework.Core.Entity;
-using OpenData.Common.Caching;
-using Newtonsoft.Json;
-using OpenData.Common.AppEngine;
+using OpenData.Framework.Core.Entity; 
+using Newtonsoft.Json; 
 using Autofac;
+using Microsoft.Extensions.Logging;
+using Bzway.Common.Share;
+using Bzway.Data.Core;
 
 namespace OpenData.Framework.Core
 {
@@ -23,8 +21,8 @@ namespace OpenData.Framework.Core
     {
 
         #region ctor
-        static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        readonly ICacheManager cache = ApplicationEngine.Current.Default.Resolve<ICacheManager>();
+        readonly ILogger<WechatManager> log;
+        readonly ICacheManager cache;
 
         readonly IDatabase db;
         public WechatManager(IDatabase db, string uuid)
@@ -233,7 +231,7 @@ namespace OpenData.Framework.Core
         /// <param name="filePath"></param>
         /// <param name="forms"></param>
         /// <returns></returns>
-        public string HttpPost(string url, string fileForm, string filePath, params  WechatMaterialRequestModel[] forms)
+        public string HttpPost(string url, string fileForm, string filePath, params WechatMaterialRequestModel[] forms)
         {
 
             FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
@@ -1235,7 +1233,7 @@ namespace OpenData.Framework.Core
         /// <param name="description"></param>
         /// <param name="article"></param>
         /// <returns></returns>
-        public string CreateNewsMaterial(string title, string description, params  WechatNewsMaterial[] article)
+        public string CreateNewsMaterial(string title, string description, params WechatNewsMaterial[] article)
         {
             var url = "https://api.weixin.qq.com/cgi-bin/material/add_news?access_token=ACCESS_TOKEN";
             url = url.Replace("ACCESS_TOKEN", this.TryGetAccessToken(false));

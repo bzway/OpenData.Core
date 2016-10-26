@@ -1,4 +1,6 @@
 ﻿using Autofac;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Microsoft.Owin;
 using OpenData.Common.AppEngine;
 using OpenData.Framework.Common;
@@ -13,8 +15,8 @@ using System.Web;
 
 namespace OpenData.Framework.Core
 {
-   
-  
+
+
     public enum LoginStatus
     {
         // Summary:
@@ -42,22 +44,18 @@ namespace OpenData.Framework.Core
     public class UserManager
     {
         #region ctor
-        static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         static readonly string SessionKey = "Bzway.Session";
         static readonly string PasswordKey = "BzwayIdentity";
         static readonly DateTime BaseDate = new DateTime(2010, 4, 22);
-        readonly IOwinContext context;
-        IUserService userService = ApplicationEngine.Current.Default.Resolve<IUserService>();
-        ISMSService smsService = ApplicationEngine.Current.Default.Resolve<ISMSService>();
-        ISMTPService smtpService = ApplicationEngine.Current.Default.Resolve<ISMTPService>();
-        public UserManager(HttpContextBase context)
-        {
-            this.context = context.GetOwinContext();
-        }
-        public UserManager(IOwinContext context)
+        readonly ILogger<UserManager> log;
+        readonly HttpContext context;
+        readonly IUserService userService;
+
+        public UserManager(HttpContext context)
         {
             this.context = context;
         }
+
         #endregion
         #region PasswordSignIn
         public Task<LoginStatus> PasswordSignInAsync(string loginName, string password, bool rememberMe = true)
