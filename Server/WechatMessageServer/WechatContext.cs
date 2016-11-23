@@ -59,61 +59,67 @@ namespace Bzway.Wechat.MessageServer
     }
     public class WechatContext
     {
+        private readonly HttpContext context;
+        private readonly XmlDocument doc;
+
         public WechatContext(HttpContext context)
         {
+            if (context == null)
+            {
+                this.Signatured = false;
+                return;
+            }
             this.context = context;
             this.Signatured = this.CheckSignature();
             if (!Signatured)
             {
                 return;
             }
+            this.doc = new XmlDocument();
             this.doc.Load(context.Request.Body);
         }
 
-        HttpContext context;
-        XmlDocument doc;
-
-
-        private WechatMessageType messageType;
-        public WechatMessageType MessageType
+        private WechatMessageBase wechatEventMessage;
+        public WechatMessageBase Message
         {
             get
             {
-                if (messageType == null)
+                if (wechatEventMessage == null)
                 {
-                    string msgType =this.doc.GetElementsByTagName("MsgType")[0].InnerText;
+                    string msgType = this.doc.GetElementsByTagName("MsgType")[0].InnerText;
                     switch (msgType)
                     {
                         case "text"://文本消息
-                            this.doc.OuterXml;
-                            ProcessText(xd, FromUserName, ToUserName);
+
+                            this.wechatEventMessage = SerializationHelper.XmlDeserialize<WechatMessageBase>(this.doc.OuterXml);
                             break;
                         case "image"://图片消息
-                            ProcessImage(xd, FromUserName, ToUserName);
+                            this.wechatEventMessage = SerializationHelper.XmlDeserialize<WechatMessageBase>(this.doc.OuterXml);
                             break;
                         case "location"://地理位置消息
-                            ProcessLocation(xd, FromUserName, ToUserName);
+                            this.wechatEventMessage = SerializationHelper.XmlDeserialize<WechatMessageBase>(this.doc.OuterXml);
                             break;
                         case "link"://链接消息
-                            ProcessLink(xd, FromUserName, ToUserName);
+                            this.wechatEventMessage = SerializationHelper.XmlDeserialize<WechatMessageBase>(this.doc.OuterXml);
                             break;
                         case "event"://事件推送
-                            ProcessEvent(xd, FromUserName, ToUserName);
+                                     //todo foreach event
+                            this.wechatEventMessage = SerializationHelper.XmlDeserialize<WechatMessageBase>(this.doc.OuterXml);
                             break;
                         case "voice"://语音消息
-                            ProcessVoice(xd, FromUserName, ToUserName);
+                            this.wechatEventMessage = SerializationHelper.XmlDeserialize<WechatMessageBase>(this.doc.OuterXml);
                             break;
                         case "video"://视频消息
-                            ProcessVideo(xd, FromUserName, ToUserName);
+                            this.wechatEventMessage = SerializationHelper.XmlDeserialize<WechatMessageBase>(this.doc.OuterXml);
                             break;
                         case "shortvideo"://小视频
-                            ProcessShortVideo(xd, FromUserName, ToUserName);
+                            this.wechatEventMessage = SerializationHelper.XmlDeserialize<WechatMessageBase>(this.doc.OuterXml);
                             break;
                         default:
                             break;
                     }
                 }
-                
+                return this.wechatEventMessage;
             }
         }
         bool CheckSignature()
@@ -165,5 +171,5 @@ namespace Bzway.Wechat.MessageServer
 
 
     }
-   
+
 }

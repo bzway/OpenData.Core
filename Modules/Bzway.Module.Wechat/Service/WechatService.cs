@@ -4,19 +4,15 @@ using System.Linq;
 using Bzway.Module.Wechat.Entity;
 using Bzway.Data.Core;
 using Microsoft.Extensions.Logging;
+using Bzway.Framework.Application;
+using Bzway.Framework.Application.Entity;
 
 namespace Bzway.Module.Wechat.Service
 {
-    public class WechatService
+    public class WechatService : BaseService<WechatService>
     {
         #region ctor
-        private readonly ILogger<WechatService> logger;
-        private readonly IDatabase db;
-        public WechatService(ILoggerFactory loggerFactory)
-        {
-            this.db = OpenDatabase.GetDatabase();
-            this.logger = loggerFactory.CreateLogger<WechatService>();
-        }
+        public WechatService(ILoggerFactory loggerFactory, Site site) : base(loggerFactory, site) { }
         #endregion
 
         public IEnumerable<WechatKeyword> GetWechatResponse(string Keyword = "", SearchType SearchType = SearchType.None, string wechatId = "")

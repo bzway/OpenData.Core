@@ -28,11 +28,11 @@ namespace Bzway.Wechat.MessageServer
         static string ProcessKeyWord(WechatContext context)
         {
             IWechatService service = AppEngine.Current.Get<IWechatService>();
-            if (context.MessageType)
+            if (context.Message == Module.Wechat.Model.WechatMessageType.WechatTextEventMessage)
             {
 
             }
-            var list = service.GetWechatResponse(context.Text, Module.Wechat.Entity.SearchType.None, context.CurrentOfficialAccount.Id);
+            var list = service.GetWechatResponse(context.openId, Module.Wechat.Entity.SearchType.None, context.CurrentOfficialAccount.Id);
 
 
             return "Keyword";
@@ -70,11 +70,6 @@ namespace Bzway.Wechat.MessageServer
             {
                 return string.Empty;
             }
-            if (!context.IsPost)
-            {
-                return context.Echo();
-            }
-            //insert wechatlog
             //todo
             return null;
         }

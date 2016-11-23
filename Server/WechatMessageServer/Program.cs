@@ -7,7 +7,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections.Generic; 
+using System.Collections.Generic;
 
 namespace Bzway.Wechat.MessageServer
 {
@@ -16,7 +16,7 @@ namespace Bzway.Wechat.MessageServer
         public static void Main(string[] args)
         {
             WebServer server = new WebServer();
-            server.Use();
+            server.UseBaseProcess();
             server.UseMvc();
             //server.UseKeyWord();
             server.Run();
