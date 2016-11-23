@@ -8,27 +8,27 @@ using System.ComponentModel;
 
 namespace Bzway.Module.Wechat.Model
 {
-    [Serializable]
+   
     [XmlRoot(ElementName = "xml", Namespace = null)]
     public class WechatEventMessage : WechatMessageBase
     {
         public string Event { get; set; }
     }
 
-    [Serializable]
+   
     [XmlRoot(ElementName = "xml", Namespace = null)]
     public class WechatEventSubscribe : WechatEventMessage
     {
     }
 
-    [Serializable]
+   
     [XmlRoot(ElementName = "xml", Namespace = null)]
     public class WechatEventUnsubscribe : WechatEventMessage
     {
     }
 
 
-    [Serializable]
+   
     [XmlRoot(ElementName = "xml", Namespace = null)]
     public class WechatEventScanSubscribe : WechatEventMessage
     {
@@ -36,7 +36,7 @@ namespace Bzway.Module.Wechat.Model
         public string Ticket { get; set; }
     }
 
-    [Serializable]
+   
     [XmlRoot(ElementName = "xml", Namespace = null)]
     public class WechatEventScan : WechatEventMessage
     {

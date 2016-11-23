@@ -7,10 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 
 namespace Bzway.Module.Wechat.Model
-{
-
-
-    [Serializable]
+{   
     [XmlRoot(ElementName = "xml", Namespace = null)]
     public class WechatTextEventMessage : WechatMessageBase
     {
@@ -18,7 +15,7 @@ namespace Bzway.Module.Wechat.Model
         public string Content { get; set; }
     }
 
-    [Serializable]
+   
     [XmlRoot(ElementName = "xml", Namespace = null)]
     public class WechatImageEventMessage : WechatMessageBase
     {
@@ -32,7 +29,7 @@ namespace Bzway.Module.Wechat.Model
 
     }
 
-    [Serializable]
+   
     [XmlRoot(ElementName = "xml", Namespace = null)]
     public class WechatVoiceEventMessage : WechatMessageBase
     {
@@ -52,7 +49,7 @@ namespace Bzway.Module.Wechat.Model
 
     }
 
-    [Serializable]
+   
     [XmlRoot(ElementName = "xml", Namespace = null)]
     public class WechatVideoEventMessage : WechatMessageBase
     {
@@ -65,7 +62,7 @@ namespace Bzway.Module.Wechat.Model
 
     }
 
-    [Serializable]
+   
     [XmlRoot(ElementName = "xml", Namespace = null)]
     public class WechatShortVideoEventMessage : WechatMessageBase
     {
@@ -79,7 +76,7 @@ namespace Bzway.Module.Wechat.Model
 
     }
 
-    [Serializable]
+   
     [XmlRoot(ElementName = "xml", Namespace = null)]
     public class WechatLocationEventMessage : WechatMessageBase
     {
@@ -90,7 +87,7 @@ namespace Bzway.Module.Wechat.Model
         public string Label { get; set; }
     }
 
-    [Serializable]
+   
     [XmlRoot(ElementName = "xml", Namespace = null)]
     public class WechatLinkEventMessage : WechatMessageBase
     {

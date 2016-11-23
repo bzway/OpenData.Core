@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace Bzway.Module.Wechat..Model
+namespace Bzway.Module.Wechat.Model
 {
     public class UserCumulateModel
     {

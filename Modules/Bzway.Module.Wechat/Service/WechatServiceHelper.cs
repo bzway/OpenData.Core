@@ -8,6 +8,12 @@ using Bzway.Framework.Application;
 using Bzway.Framework.Application.Entity;
 using Newtonsoft.Json;
 using System.Net.Http;
+using Bzway.Module.Wechat.Model;
+using Accentiv.Spark.Service.Wechat;
+using System.IO;
+using System.Threading.Tasks;
+using Bzway.Common.Utility;
+
 namespace Bzway.Module.Wechat.Service
 {
     public class WechatServiceHelper : BaseService<WechatService>
@@ -17,7 +23,10 @@ namespace Bzway.Module.Wechat.Service
         public WechatServiceHelper(ILoggerFactory loggerFactory, Site site) : base(loggerFactory, site) { }
         #endregion
 
-
+        public string Get(string url, string data)
+        {
+            return string.Empty;
+        }
         public string Post(string url, string data)
         {
             try
@@ -27,7 +36,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                this.logger.LogError("{0}", ex);
+                this.logger.LogError("{0}{0}", ex);
                 return null;
             }
         }
@@ -39,7 +48,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                this.logger.LogError("WeChatHttps.GetAccessToken{0}", ex);
+                this.logger.LogError("WeChatHttps.GetAccessToken{0}{0}", ex);
                 return null;
             }
 
@@ -54,7 +63,7 @@ namespace Bzway.Module.Wechat.Service
                 var request = new WechatPostRequest() { functionName = "createMenu", data = menu.ToString() };
                 var state = Guid.NewGuid().ToString("N");
                 string result = Post(state, request.ToString());
-                log.Info("返回json：" + result);
+
                 var respone = JsonConvert.DeserializeObject<WebServiceResponse>(result);
                 if (state != respone.state)
                 {
@@ -68,7 +77,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.CreateMenu", ex);
+                this.logger.LogError("WechatServiceHelper.CreateMenu{0}", ex);
                 return new WechatMenuResult() { errcode = "500", errmsg = "接口调用出错！详情见错误日志,WechatServiceHelper.CreateMenu" }.ToString();
             }
         }
@@ -94,7 +103,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetMenu", ex);
+                this.logger.LogError("WechatServiceHelper.GetMenu{0}", ex);
                 return null;
             }
         }
@@ -120,7 +129,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.DeleteMenu", ex);
+                this.logger.LogError("WechatServiceHelper.DeleteMenu{0}", ex);
                 return null;
             }
         }
@@ -144,7 +153,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.AddConditionalMenu", ex);
+                this.logger.LogError("WechatServiceHelper.AddConditionalMenu{0}", ex);
                 return null;
             }
         }
@@ -171,7 +180,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.DeleteConditionalMenu", ex);
+                this.logger.LogError("WechatServiceHelper.DeleteConditionalMenu{0}", ex);
                 return null;
             }
         }
@@ -197,7 +206,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetCurrentSelfMenu", ex);
+                this.logger.LogError("WechatServiceHelper.GetCurrentSelfMenu{0}", ex);
                 return null;
             }
         }
@@ -226,7 +235,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetKFList", ex);
+                this.logger.LogError("WechatServiceHelper.GetKFList{0}", ex);
                 return null;
             }
         }
@@ -235,7 +244,7 @@ namespace Bzway.Module.Wechat.Service
         {
             try
             {
-                log.Info("发送客服消息Json：" + JsonConvert.SerializeObject(custom));
+
                 var request = new WechatPostRequest() { functionName = "customSend", data = custom.ToString() };
                 var state = Guid.NewGuid().ToString("N");
                 var respone = JsonConvert.DeserializeObject<WebServiceResponse>(Post(state, request.ToString()));
@@ -251,7 +260,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.CustomSend", ex);
+                this.logger.LogError("WechatServiceHelper.CustomSend{0}", ex);
                 return null;
             }
         }
@@ -275,7 +284,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.SendMsgByUserGroup", ex);
+                this.logger.LogError("WechatServiceHelper.SendMsgByUserGroup{0}", ex);
                 return null;
             }
         }
@@ -291,7 +300,7 @@ namespace Bzway.Module.Wechat.Service
                 {
                     return null;
                 }
-                log.Info("WechatServiceHelper.SendMsgByOpenid:" + respone.result.ToString());
+
                 if (respone.resultCode == ResultCode.Success)
                 {
                     return respone.result.ToString();
@@ -300,12 +309,12 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.SendMsgByOpenid", ex);
+                this.logger.LogError("WechatServiceHelper.SendMsgByOpenid{0}", ex);
                 return null;
             }
         }
 
-        public JObject ViewMaterial(string data)
+        public string ViewMaterial(string data)
         {
             try
             {
@@ -320,14 +329,13 @@ namespace Bzway.Module.Wechat.Service
                 }
                 if (respone.resultCode == ResultCode.Success)
                 {
-                    JObject wxJsonObj = (JObject)JsonConvert.DeserializeObject(respone.result.ToString());
-                    return wxJsonObj;
+                    return respone.result.ToString();
                 }
                 return null;
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetOnLineKFList", ex);
+                this.logger.LogError("WechatServiceHelper.GetOnLineKFList{0}", ex);
                 return null;
             }
         }
@@ -352,7 +360,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.DeleteGroupMsg", ex);
+                this.logger.LogError("WechatServiceHelper.DeleteGroupMsg{0}", ex);
                 return null;
             }
         }
@@ -376,7 +384,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.SendTemplateMsg", ex);
+                this.logger.LogError("WechatServiceHelper.SendTemplateMsg{0}", ex);
                 return null;
             }
         }
@@ -407,7 +415,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetJsapiTicket", ex);
+                this.logger.LogError("WechatServiceHelper.GetJsapiTicket{0}", ex);
                 return null;
             }
         }
@@ -434,7 +442,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetCardapiTicket", ex);
+                this.logger.LogError("WechatServiceHelper.GetCardapiTicket{0}", ex);
                 return null;
             }
         }
@@ -462,7 +470,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetUserinfo", ex);
+                this.logger.LogError("WechatServiceHelper.GetUserinfo{0}", ex);
                 return null;
             }
         }
@@ -475,7 +483,6 @@ namespace Bzway.Module.Wechat.Service
         {
             try
             {
-                log.Info("CreateMaterial:" + material.ToString());
                 var request = new WechatPostRequest() { functionName = "createMaterial", data = material.ToString() };
                 var state = Guid.NewGuid().ToString("N");
                 var respone = JsonConvert.DeserializeObject<WebServiceResponse>(Post(state, request.ToString()));
@@ -491,7 +498,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.CreateMaterial", ex);
+                this.logger.LogError("WechatServiceHelper.CreateMaterial{0}", ex);
                 return null;
             }
         }
@@ -517,7 +524,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetMaterial", ex);
+                this.logger.LogError("WechatServiceHelper.GetMaterial{0}", ex);
                 return null;
             }
         }
@@ -542,7 +549,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.DeleteMaterial", ex);
+                this.logger.LogError("WechatServiceHelper.DeleteMaterial{0}", ex);
                 return null;
             }
         }
@@ -566,7 +573,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.UpdateMaterial", ex);
+                this.logger.LogError("WechatServiceHelper.UpdateMaterial{0}", ex);
                 return null;
             }
         }
@@ -593,7 +600,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.getMaterialCount", ex);
+                this.logger.LogError("WechatServiceHelper.getMaterialCount{0}", ex);
                 return null;
             }
         }
@@ -619,7 +626,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetMaterialList", ex);
+                this.logger.LogError("WechatServiceHelper.GetMaterialList{0}", ex);
                 return null;
             }
         }
@@ -648,7 +655,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.CreateGroup", ex);
+                this.logger.LogError("WechatServiceHelper.CreateGroup{0}", ex);
                 return null;
             }
         }
@@ -674,7 +681,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetAllGroups", ex);
+                this.logger.LogError("WechatServiceHelper.GetAllGroups{0}", ex);
                 return null;
             }
         }
@@ -699,7 +706,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetMemberGroup", ex);
+                this.logger.LogError("WechatServiceHelper.GetMemberGroup{0}", ex);
                 return null;
             }
         }
@@ -724,7 +731,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.UpdateGroup", ex);
+                this.logger.LogError("WechatServiceHelper.UpdateGroup{0}", ex);
                 return null;
             }
         }
@@ -749,7 +756,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.MoveMemberGroup", ex);
+                this.logger.LogError("WechatServiceHelper.MoveMemberGroup{0}", ex);
                 return null;
             }
         }
@@ -773,7 +780,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.BatchMoveMemberGroup", ex);
+                this.logger.LogError("WechatServiceHelper.BatchMoveMemberGroup{0}", ex);
                 return null;
             }
         }
@@ -798,7 +805,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.DeleteGroup", ex);
+                this.logger.LogError("WechatServiceHelper.DeleteGroup{0}", ex);
                 return null;
             }
         }
@@ -823,7 +830,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.UpdateRemark", ex);
+                this.logger.LogError("WechatServiceHelper.UpdateRemark{0}", ex);
                 return null;
             }
         }
@@ -847,7 +854,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetDetailUserInfoList", ex);
+                this.logger.LogError("WechatServiceHelper.GetDetailUserInfoList{0}", ex);
                 return null;
             }
         }
@@ -875,7 +882,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetUserInfoList", ex);
+                this.logger.LogError("WechatServiceHelper.GetUserInfoList{0}", ex);
                 return null;
             }
         }
@@ -903,7 +910,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetDetailUserInfo", ex);
+                this.logger.LogError("WechatServiceHelper.GetDetailUserInfo{0}", ex);
                 return null;
             }
         }
@@ -932,7 +939,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.CreateQRCodeTicket", ex);
+                this.logger.LogError("WechatServiceHelper.CreateQRCodeTicket{0}", ex);
                 return null;
             }
         }
@@ -957,7 +964,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetShortUrl", ex);
+                this.logger.LogError("WechatServiceHelper.GetShortUrl{0}", ex);
                 return null;
             }
         }
@@ -987,7 +994,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetUserSummary", ex);
+                this.logger.LogError("WechatServiceHelper.GetUserSummary{0}", ex);
                 return null;
             }
         }
@@ -1013,7 +1020,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetUserCumulate", ex);
+                this.logger.LogError("WechatServiceHelper.GetUserCumulate{0}", ex);
                 return null;
             }
         }
@@ -1039,7 +1046,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetArticleSummary", ex);
+                this.logger.LogError("WechatServiceHelper.GetArticleSummary{0}", ex);
                 return null;
             }
         }
@@ -1065,7 +1072,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetArticleTotal", ex);
+                this.logger.LogError("WechatServiceHelper.GetArticleTotal{0}", ex);
                 return null;
             }
         }
@@ -1091,7 +1098,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetUserRead", ex);
+                this.logger.LogError("WechatServiceHelper.GetUserRead{0}", ex);
                 return null;
             }
         }
@@ -1117,7 +1124,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetUserReadByHour", ex);
+                this.logger.LogError("WechatServiceHelper.GetUserReadByHour{0}", ex);
                 return null;
             }
         }
@@ -1143,7 +1150,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetUserShare", ex);
+                this.logger.LogError("WechatServiceHelper.GetUserShare{0}", ex);
                 return null;
             }
         }
@@ -1169,7 +1176,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetUserShareByHour", ex);
+                this.logger.LogError("WechatServiceHelper.GetUserShareByHour{0}", ex);
                 return null;
             }
         }
@@ -1195,7 +1202,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetUpStreamMsg", ex);
+                this.logger.LogError("WechatServiceHelper.GetUpStreamMsg{0}", ex);
                 return null;
             }
         }
@@ -1221,7 +1228,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetUpStreamMsgByHour", ex);
+                this.logger.LogError("WechatServiceHelper.GetUpStreamMsgByHour{0}", ex);
                 return null;
             }
         }
@@ -1247,7 +1254,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetUpStreamMsgByWeek", ex);
+                this.logger.LogError("WechatServiceHelper.GetUpStreamMsgByWeek{0}", ex);
                 return null;
             }
         }
@@ -1273,7 +1280,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetUpStreamMsgByMonth", ex);
+                this.logger.LogError("WechatServiceHelper.GetUpStreamMsgByMonth{0}", ex);
                 return null;
             }
         }
@@ -1299,7 +1306,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetUpStreamMsgDist", ex);
+                this.logger.LogError("WechatServiceHelper.GetUpStreamMsgDist{0}", ex);
                 return null;
             }
         }
@@ -1325,7 +1332,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetUpStreamMsgDistByWeek", ex);
+                this.logger.LogError("WechatServiceHelper.GetUpStreamMsgDistByWeek{0}", ex);
                 return null;
             }
         }
@@ -1351,7 +1358,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetUpStreamMsgDistByMonth", ex);
+                this.logger.LogError("WechatServiceHelper.GetUpStreamMsgDistByMonth{0}", ex);
                 return null;
             }
         }
@@ -1377,7 +1384,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetInterfaceSummary", ex);
+                this.logger.LogError("WechatServiceHelper.GetInterfaceSummary{0}", ex);
                 return null;
             }
 
@@ -1404,7 +1411,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetInterfaceSummaryByHour", ex);
+                this.logger.LogError("WechatServiceHelper.GetInterfaceSummaryByHour{0}", ex);
                 return null;
             }
 
@@ -1433,7 +1440,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.CreateCards", ex);
+                this.logger.LogError("WechatServiceHelper.CreateCards{0}", ex);
                 return null;
             }
         }
@@ -1458,7 +1465,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetOneCardQrCode", ex);
+                this.logger.LogError("WechatServiceHelper.GetOneCardQrCode{0}", ex);
                 return null;
             }
         }
@@ -1483,7 +1490,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetMultipleCardQrCode", ex);
+                this.logger.LogError("WechatServiceHelper.GetMultipleCardQrCode{0}", ex);
                 return null;
             }
         }
@@ -1509,7 +1516,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetCardStatus", ex);
+                this.logger.LogError("WechatServiceHelper.GetCardStatus{0}", ex);
                 return null;
             }
 
@@ -1534,7 +1541,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.UpdateCard", ex);
+                this.logger.LogError("WechatServiceHelper.UpdateCard{0}", ex);
                 return null;
             }
 
@@ -1561,7 +1568,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.ModifyStock", ex);
+                this.logger.LogError("WechatServiceHelper.ModifyStock{0}", ex);
                 return null;
             }
 
@@ -1587,7 +1594,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.DeleteCard", ex);
+                this.logger.LogError("WechatServiceHelper.DeleteCard{0}", ex);
                 return null;
             }
         }
@@ -1612,7 +1619,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.DeleteCard", ex);
+                this.logger.LogError("WechatServiceHelper.DeleteCard{0}", ex);
                 return null;
             }
         }
@@ -1636,7 +1643,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.ActivateCard", ex);
+                this.logger.LogError("WechatServiceHelper.ActivateCard{0}", ex);
                 return null;
             }
         }
@@ -1663,7 +1670,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.DeleteCard", ex);
+                this.logger.LogError("WechatServiceHelper.DeleteCard{0}", ex);
                 return null;
             }
 
@@ -1692,7 +1699,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.DecryptCard", ex);
+                this.logger.LogError("WechatServiceHelper.DecryptCard{0}", ex);
                 return null;
             }
 
@@ -1721,7 +1728,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.CreatePoi", ex);
+                this.logger.LogError("WechatServiceHelper.CreatePoi{0}", ex);
                 return null;
             }
         }
@@ -1745,7 +1752,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetPoi", ex);
+                this.logger.LogError("WechatServiceHelper.GetPoi{0}", ex);
                 return null;
             }
         }
@@ -1770,7 +1777,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetPoiList", ex);
+                this.logger.LogError("WechatServiceHelper.GetPoiList{0}", ex);
                 return null;
             }
         }
@@ -1794,7 +1801,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.UpdatePoi", ex);
+                this.logger.LogError("WechatServiceHelper.UpdatePoi{0}", ex);
                 return null;
             }
         }
@@ -1819,7 +1826,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.DeletePoi", ex);
+                this.logger.LogError("WechatServiceHelper.DeletePoi{0}", ex);
                 return null;
             }
         }
@@ -1843,7 +1850,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetWxCategory", ex);
+                this.logger.LogError("WechatServiceHelper.GetWxCategory{0}", ex);
                 return null;
             }
         }
@@ -1874,7 +1881,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetOnLineKFList", ex);
+                this.logger.LogError("WechatServiceHelper.GetOnLineKFList{0}", ex);
                 return null;
             }
         }
@@ -1898,7 +1905,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.CreateCustom", ex);
+                this.logger.LogError("WechatServiceHelper.CreateCustom{0}", ex);
                 return null;
             }
         }
@@ -1922,28 +1929,28 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.InvitationCustom", ex);
+                this.logger.LogError("WechatServiceHelper.InvitationCustom{0}", ex);
                 return null;
             }
         }
 
-        public string UploadCustomHeadImg(string filePath, string accountName)
+        public async Task<string> UploadCustomHeadImg(string filePath, string accountName)
         {
             try
             {
-                string result = "";
                 var accessToken = GetAccessToken();
-                string wxurl = string.Format("https://api.weixin.qq.com/customservice/kfaccount/uploadheadimg?access_token={0}&kf_account={1}", accessToken, accountName);
-                WebClient myWebClient = new WebClient();
-                myWebClient.Credentials = CredentialCache.DefaultCredentials;
-
-                byte[] responseArray = myWebClient.UploadFile(wxurl, "POST", filePath);
-                result = System.Text.Encoding.Default.GetString(responseArray, 0, responseArray.Length);
-                return result.Replace("\\/", "/");
+                string url = string.Format("https://api.weixin.qq.com/customservice/kfaccount/uploadheadimg?access_token={0}&kf_account={1}", accessToken, accountName);
+                using (var formDataContent = new MultipartFormDataContent())
+                {
+                    formDataContent.Add(new ByteArrayContent(File.ReadAllBytes(filePath)), "files", "test");
+                    HttpResponseMessage response = await webClient.PostAsync(url, formDataContent);
+                    var result = await response.Content.ReadAsByteArrayAsync();
+                    return Convert.ToBase64String(result);
+                }
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.UploadHeadImg", ex);
+                this.logger.LogError("WechatServiceHelper.UploadHeadImg{0}", ex);
                 return null;
             }
         }
@@ -1967,7 +1974,8 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.UpdateCustom", ex);
+
+                this.logger.LogError("WechatServiceHelper.UpdateCustom{0}", ex);
                 return null;
             }
 
@@ -1992,7 +2000,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.DeleteCustom", ex);
+                this.logger.LogError("WechatServiceHelper.DeleteCustom{0}", ex);
                 return null;
             }
         }
@@ -2016,7 +2024,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.Opendialogue", ex);
+                this.logger.LogError("WechatServiceHelper.Opendialogue{0}", ex);
                 return null;
             }
 
@@ -2041,7 +2049,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.Closedialogue", ex);
+                this.logger.LogError("WechatServiceHelper.Closedialogue{0}", ex);
                 return null;
             }
 
@@ -2070,7 +2078,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.Getsession", ex);
+                this.logger.LogError("WechatServiceHelper.Getsession{0}", ex);
                 return null;
             }
         }
@@ -2095,7 +2103,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.GetMsgRecord", ex);
+                this.logger.LogError("WechatServiceHelper.GetMsgRecord{0}", ex);
                 return null;
             }
 
@@ -2124,7 +2132,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.Register", ex);
+                this.logger.LogError("WechatServiceHelper.Register{0}", ex);
                 return null;
             }
         }
@@ -2148,7 +2156,7 @@ namespace Bzway.Module.Wechat.Service
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.AuditStatus", ex);
+                this.logger.LogError("WechatServiceHelper.AuditStatus{0}", ex);
                 return null;
             }
         }
@@ -2168,23 +2176,23 @@ namespace Bzway.Module.Wechat.Service
         #endregion
 
         #region 微信上传
-        public string UploadImg(string filePath)
+        public async Task<string> UploadImg(string filePath)
         {
             try
             {
-                string result = "";
                 var accessToken = GetAccessToken();
-                string wxurl = "https://api.weixin.qq.com/cgi-bin/media/uploadimg?access_token=" + accessToken;
-                WebClient myWebClient = new WebClient();
-                myWebClient.Credentials = CredentialCache.DefaultCredentials;
-
-                byte[] responseArray = myWebClient.UploadFile(wxurl, "POST", filePath);
-                result = System.Text.Encoding.Default.GetString(responseArray, 0, responseArray.Length);
-                return result.Replace("\\/", "/");
+                string url = "https://api.weixin.qq.com/cgi-bin/media/uploadimg?access_token=" + accessToken;
+                using (var formDataContent = new MultipartFormDataContent())
+                {
+                    formDataContent.Add(new ByteArrayContent(File.ReadAllBytes(filePath)), "files", "test");
+                    HttpResponseMessage response = await webClient.PostAsync(url, formDataContent);
+                    var result = await response.Content.ReadAsByteArrayAsync();
+                    return Convert.ToBase64String(result);
+                }
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.uploadImg", ex);
+                this.logger.LogError("WechatServiceHelper.uploadImg{0}", ex);
                 return null;
             }
         }
@@ -2194,48 +2202,35 @@ namespace Bzway.Module.Wechat.Service
         /// <param name="filePath"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public string Upload(string filePath, string type)
+        public async Task<string> Upload(string filePath, string type)
         {
             try
             {
-                string result = "";
                 var accessToken = GetAccessToken();
-                string wxurl = "https://api.weixin.qq.com/cgi-bin/media/upload?access_token=" + accessToken + "&type=" + type;
-                WebClient myWebClient = new WebClient();
-                myWebClient.Credentials = CredentialCache.DefaultCredentials;
-
-                byte[] responseArray = myWebClient.UploadFile(wxurl, "POST", filePath);
-                result = System.Text.Encoding.Default.GetString(responseArray, 0, responseArray.Length);
-                return result.Replace("\\/", "/");
+                string url = "https://api.weixin.qq.com/cgi-bin/media/upload?access_token=" + accessToken + "&type=" + type;
+                using (var formDataContent = new MultipartFormDataContent())
+                {
+                    formDataContent.Add(new ByteArrayContent(File.ReadAllBytes(filePath)), "files", "test");
+                    HttpResponseMessage response = await webClient.PostAsync(url, formDataContent);
+                    var result = await response.Content.ReadAsByteArrayAsync();
+                    return Convert.ToBase64String(result);
+                }
             }
             catch (Exception ex)
             {
-                log.Error("WechatServiceHelper.Upload", ex);
+                this.logger.LogError("WechatServiceHelper.Upload{0}", ex);
                 return null;
             }
         }
 
         #endregion
 
-        public int ConvertDateTimeInt(DateTime time)
-        {
-            DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
-            return (int)(time - startTime).TotalSeconds;
-        }
 
         public string JSAPITicket
         {
             get
             {
-                var jsapiTicket = CacheHelper.GetCache("jsapiTicket") != null ? CacheHelper.GetCache("jsapiTicket").ToString() : null;
-                if (string.IsNullOrEmpty(jsapiTicket))
-                {
-                    WechatServiceHelper helper = new WechatServiceHelper(SessionHelper.CurrentOfficalAccount.AppName, SessionHelper.CurrentOfficalAccount.SecurityKey, "Backoffice", "Website");
-                    GetJsapiTicketModel jsmodel = helper.GetJsapiTicket();
-                    jsapiTicket = jsmodel.ticket;
-                    CacheHelper.AddCache("jsapiTicket", jsapiTicket, 60);
-                }
-                return jsapiTicket;
+                return string.Empty;
             }
         }
 
@@ -2243,43 +2238,29 @@ namespace Bzway.Module.Wechat.Service
         {
             get
             {
-                string cardapiTicket = CacheHelper.GetCache("cardapiTicket") != null ? CacheHelper.GetCache("cardapiTicket").ToString() : null;
-                if (string.IsNullOrEmpty(cardapiTicket))
-                {
-                    WechatServiceHelper helper = new WechatServiceHelper(SessionHelper.CurrentOfficalAccount.AppName, SessionHelper.CurrentOfficalAccount.SecurityKey, "Backoffice", "Website");
-                    GetJsapiTicketModel cardmodel = helper.GetCardapiTicket();
-                    cardapiTicket = cardmodel.ticket;
-                    CacheHelper.AddCache("cardapiTicket", cardapiTicket, 60);
-                }
-                return cardapiTicket;
+                return string.Empty;
             }
         }
 
         public WeChatSDKModel GetSDKConfig(string url)
         {
             WeChatSDKModel weChatSDKModel = new WeChatSDKModel();
-            System.DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1));
-            weChatSDKModel.timeStamp = (int)(DateTime.Now - startTime).TotalSeconds;
+            weChatSDKModel.timeStamp = (int)DateTimeHelper.GetBaseTimeValue(DateTime.Now);
 
             weChatSDKModel.nonceStr = Guid.NewGuid().ToString("N");
-            string jsapi_ticket = WechatServiceHelper.JSAPITicket;// WechatHelper.JSAPITicket;
+            string jsapi_ticket = this.JSAPITicket;
             string string1 = "jsapi_ticket=" + jsapi_ticket + "&noncestr=" + weChatSDKModel.nonceStr + "&timestamp=" + weChatSDKModel.timeStamp + "&url=" + url;
-            log.Info("JSsdkConfig:" + string1);
-            weChatSDKModel.signature = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(string1, "SHA1");
-            weChatSDKModel.appId = SessionHelper.CurrentOfficalAccount.AppId;//System.Configuration.ConfigurationManager.AppSettings["appid"];
+            weChatSDKModel.signature = Cryptor.EncryptSHA1(string1);
+            weChatSDKModel.appId = string.Empty;// AppSettings["appid"];
             return weChatSDKModel;
         }
 
 
 
-        public string RedirectToAuthorizeUrl(string redirectUrl, string state, string scope)
+        public string RedirectToAuthorizeUrl(string redirectUrl, string appId, string state, string scope)
         {
-            //"https://open.weixin.qq.com/connect/oauth2/authorize?appid={0}&redirect_uri={1}&response_type=code&scope={2}&state={3}#wechat_redirect";
-            string authorizeUrl = string.Format(WechatConstants.getAuthorizeUrl, this.appName, HttpUtility.UrlEncode(redirectUrl), scope, state);
-            log.Warn(authorizeUrl);
-            return authorizeUrl;
+            return string.Format("https://open.weixin.qq.com/connect/oauth2/authorize?appid={0}&redirect_uri={1}&response_type=code&scope={2}&state={3}#wechat_redirect", appId, redirectUrl, scope, state);
         }
-
         public AccessCodeModel GetAccessTokenByCode(string appId, string appSecurityKey, string code)
         {
             try
@@ -2290,18 +2271,16 @@ namespace Bzway.Module.Wechat.Service
 
                 if (state != respone.state)
                 {
-                    log.Info("GetAccessTokenByCode:state:" + state + ";responseState:" + respone.state);
                     return null;
                 }
                 if (respone.resultCode == ResultCode.Success)
                 {
                     return JsonConvert.DeserializeObject<AccessCodeModel>(respone.result.ToString());
                 }
-                log.Info("GetAccessTokenByCode respone.resultCode:" + respone.resultCode + ";respone.resultMsg:" + respone.resultMsg);
             }
             catch (Exception ex)
             {
-                log.Error("GetAccessTokenByCode", ex);
+                this.logger.LogError("GetAccessTokenByCode{0}", ex);
             }
             return null;
         }

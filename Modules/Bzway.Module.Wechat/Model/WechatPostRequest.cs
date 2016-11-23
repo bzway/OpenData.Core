@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Web;
 
-namespace Bzway.Module.Wechat..Model
+namespace Bzway.Module.Wechat.Model
 {
     public static class WechatFuntion
     {

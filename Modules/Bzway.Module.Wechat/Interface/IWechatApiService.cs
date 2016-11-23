@@ -1,4 +1,5 @@
-﻿using Bzway.Module.Wechat.Model;
+﻿using Accentiv.Spark.Service.Wechat;
+using Bzway.Module.Wechat.Model;
 
 namespace Bzway.Module.Wechat.Interface
 {
