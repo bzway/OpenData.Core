@@ -6,14 +6,18 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bzway.Sites.OpenApi.Controllers
 {
+    public class Model
+    {
+        public string media_id { get; set; }
+    }
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    public class MaterialController : Controller
     {
         // GET api/values
-        [HttpGet]
-        public IEnumerable<string> Get()
+        [HttpPost]
+        public IEnumerable<string> GetMaterial(string access_token, Model model)
         {
-            return new string[] { "value1", "value2" };
+            return new string[] { model.media_id, access_token };
         }
 
         // GET api/values/5
