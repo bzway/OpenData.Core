@@ -1,26 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using Bzway.Module.Core;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Bzway.Site.FrontPage.Data;
-using Bzway.Site.FrontPage.Models;
 using Bzway.Site.FrontPage.Services;
+using Bzway.Framework.Application;
+using Bzway.Framework.Connect.Authentication;
+using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Http;
+using Bzway.Common.Utility;
+using Bzway.Data.Core;
+using Bzway.Data.JsonFile;
 
 namespace Bzway.Site.FrontPage
 {
@@ -49,7 +40,7 @@ namespace Bzway.Site.FrontPage
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddLogging();
             // Add framework services.
@@ -59,10 +50,14 @@ namespace Bzway.Site.FrontPage
 
 
             // Add application services.
+
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
-            services.AddTransient<IAppTenant, AppTenantService>();
+            services.AddTransient<ISiteService, SiteService>();
             this.AppServices = services;
+            AppEngine.Current.Register<IDatabase, FileDatabase>("Default");
+            return AppEngine.Current.Build(services);
+
         }
         IServiceCollection AppServices { get; set; }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,15 +79,13 @@ namespace Bzway.Site.FrontPage
             }
 
             app.UseApplicationInsightsExceptionTelemetry();
-
+            //app.UseCookieAuthentication(new CookieAuthenticationOptions() { });
             app.UseStaticFiles();
-
             //app.UseIdentity();
-
-            app.UseMiddleware<AppTenantMiddleware>(this.AppServices);
+            app.UseMiddleware<UserSiteMiddleware>(this.AppServices);
+            app.UseBzwayCookieAuthentication();
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
             app.UseMvcWithDefaultRoute();
-
         }
     }
 }

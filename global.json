@@ -1,3 +1,12 @@
 {
-  "projects": [ "Data", "Common", "Modules", "Framework" ]
+  "projects": [
+    "Common",
+    "Data",
+    "Framework",
+    "Modules",
+    "Server",
+    "Sites",
+    "Tests"
+  ],
+  "sdk": { "version": "1.0.0-preview2-003121" }
 }

@@ -1,7 +1,21 @@
-﻿dir
-ECHO OFF
-Set PATH=C:\Windows\Microsoft.NET\Framework\v4.0.30319;%PATH:C:\Windows\Microsoft.NET\Framework\v4.0.30319;=%
-ECHO delete old files
-rd /s /q Publish
-MSBuild "%~dp0Website\WebSite.WebApp\OpenData.WebSite.WebApp.csproj"  /p:DeployOnBuild=true /p:PublishProfile=%~dp0\PublishProfiles.pubxml
-pause
+rem pack 
+dotnet pack D:\Work\OpenData.Core\Common\Bzway.Common.Script\project.json 
+dotnet pack D:\Work\OpenData.Core\Common\Bzway.Common.Share\project.json 
+dotnet pack D:\Work\OpenData.Core\Common\Bzway.Common.Utility\project.json 
+dotnet pack D:\Work\OpenData.Core\Data\Bzway.Data.Core\project.json 
+dotnet pack D:\Work\OpenData.Core\Data\Bzway.Data.File\project.json 
+dotnet pack D:\Work\OpenData.Core\Data\Bzway.Data.Mongo\project.json 
+dotnet pack D:\Work\OpenData.Core\Data\Bzway.Data.Sql\project.json 
+dotnet pack D:\Work\OpenData.Core\Framework\Bzway.Framework.Application\project.json 
+dotnet pack D:\Work\OpenData.Core\Framework\Bzway.Framework.Connect\project.json 
+dotnet pack D:\Work\OpenData.Core\Framework\Bzway.Framework.Content\project.json 
+dotnet pack D:\Work\OpenData.Core\Modules\Bzway.Module.Core\project.json 
+dotnet pack D:\Work\OpenData.Core\Modules\Bzway.Module.MemberClub\project.json 
+dotnet pack D:\Work\OpenData.Core\Modules\Bzway.Module.Publisher\project.json 
+dotnet pack D:\Work\OpenData.Core\Modules\Bzway.Module.UserSite\project.json 
+dotnet pack D:\Work\OpenData.Core\Modules\Bzway.Module.Wechat\project.json 
+dotnet pack D:\Work\OpenData.Core\Server\WechatMessageServer\project.json 
+dotnet pack D:\Work\OpenData.Core\Sites\Bzway.Site.BackOffice\project.json 
+dotnet pack D:\Work\OpenData.Core\Sites\Bzway.Site.FrontPage\project.json 
+dotnet pack D:\Work\OpenData.Core\Tests\AppTest\project.json 
+dotnet pack D:\Work\OpenData.Core\Tests\Data.Test\project.json 

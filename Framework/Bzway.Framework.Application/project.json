@@ -1,0 +1,29 @@
+{
+  "buildOptions": {
+    "define": [ "NETCORE" ]
+  },
+  "dependencies": {
+    "Autofac": "4.2.0",
+    "Autofac.Extensions.DependencyInjection": "4.0.0",
+    "Bzway.Common.Script": "1.0.0-*",
+    "Bzway.Common.Share": "1.0.0-*",
+    "Bzway.Common.Utility": "1.0.0-*",
+    "Bzway.Data.Core": "1.0.0-*",
+    "Microsoft.AspNetCore.DataProtection.Abstractions": "1.1.0",
+    "Microsoft.AspNetCore.Http.Abstractions": "1.1.0",
+    "Microsoft.AspNetCore.Identity": "1.1.0",
+    "Microsoft.Extensions.Logging.Abstractions": "1.1.0"
+  },
+  "frameworks": {
+    "net461": {
+      "dependencies": {
+      }
+    },
+    "netstandard1.6": {
+      "imports": "dnxcore50",
+      "buildOptions": { "define": [ "NETCORE" ] },
+      "dependencies": {
+      }
+    }
+  }
+}

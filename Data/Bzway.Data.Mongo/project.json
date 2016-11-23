@@ -1,0 +1,28 @@
+{
+  "buildOptions": {
+    "define": [ "NETCORE" ]
+  },
+  "dependencies": {
+    "MongoDB.Driver": "2.3.0",
+    "Autofac.Extensions.DependencyInjection": "4.0.0",
+    "Core": "1.0.0-*",
+    "Bzway.Common.Script": "1.0.0-*",
+    "Bzway.Common.Share": "1.0.0-*",
+    "Bzway.Common.Utility": "1.0.0-*",
+    "Bzway.Data.Core": "1.0.0-*",
+    "NETStandard.Library": "1.6.1"
+  },
+  "frameworks": {
+    "net461": {
+      "dependencies": {
+
+      }
+    },
+    "netstandard1.6": {
+      "imports": "dnxcore50",
+      "buildOptions": { "define": [ "NETCORE" ] },
+      "dependencies": {
+      }
+    }
+  }
+}

@@ -5,10 +5,9 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("Bzway.Module.Core")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCompany("Bzway")]
+[assembly: AssemblyProduct("OpenData")]
+[assembly: AssemblyCopyright("Copyright © Bzway 2016")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from
@@ -16,4 +15,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("a537ff21-3384-4cf4-8621-e5e436f72226")]
+[assembly: Guid("51720641-1fdf-4ccb-aed1-ad9ea76526b7")]

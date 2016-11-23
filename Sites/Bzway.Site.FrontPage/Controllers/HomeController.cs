@@ -1,22 +1,15 @@
-﻿using Bzway.Module.Core;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Bzway.Site.FrontPage.Controllers
 {
     public class HomeController : Controller
     {
-        IUserSite site;
-        public HomeController(IUserSite site)
-        {
-            this.site = site;
+         
+        public HomeController( )
+        { 
         }
         public IActionResult Index()
         {
-
-            if (site != null)
-            {
-                return Content(site.Name);
-            }
             return View();
         }
 

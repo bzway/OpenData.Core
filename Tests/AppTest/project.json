@@ -1,23 +1,27 @@
 {
-  "version": "1.0.0-*",
+  "buildOptions": {
+    "define": [ "NETCORE" ]
+  },
   "buildOptions": {
     "emitEntryPoint": true
   },
-
   "dependencies": {
     "Core": "1.0.0-*",
     "File": "1.0.0-*",
-    "Microsoft.NETCore.App": {
-      "type": "platform",
-      "version": "1.0.0"
-    },
     "Mongo": "1.0.0-*",
     "Sql": "1.0.0-*"
   },
-
   "frameworks": {
-    "netcoreapp1.0": {
-      "imports": "dnxcore50"
+    "net461": {
+      "dependencies": {
+
+      }
+    },
+    "netstandard1.6": {
+      "imports": "dnxcore50",
+      "buildOptions": { "define": [ "NETCORE" ] },
+      "dependencies": {
+      }
     }
   }
 }

@@ -13,12 +13,12 @@ namespace Bzway.Wechat.MessageServer
 {
     public class WebServer
     {
-        List<Func<WechatContext, string>> processorList;
+        List<Func<WechatContext, object>> processorList;
         public WebServer()
         {
-            this.processorList = new List<Func<WechatContext, string>>();
+            this.processorList = new List<Func<WechatContext, object>>();
         }
-        public WebServer Use(Func<WechatContext, string> process)
+        public WebServer Use(Func<WechatContext, object> process)
         {
             this.processorList.Add(process);
             return this;
@@ -27,24 +27,27 @@ namespace Bzway.Wechat.MessageServer
         public void Run()
         {
             Startup.ProcessorList = this.processorList;
-            while (true)
+
+            try
             {
-                try
-                {
-                    var host = new WebHostBuilder()
-                                .UseKestrel((options) => { options.AddServerHeader = false; })
-                                .UseContentRoot(Directory.GetCurrentDirectory())
-                                .UseStartup<Startup>()
-                                .Build();
-                    host.Run();
-                }
-                catch { }
+                var host = new WebHostBuilder()
+                            .UseKestrel((options) =>
+                            {
+                                options.AddServerHeader = false;
+                                options.NoDelay = false;
+
+                            })
+                            .UseContentRoot(Directory.GetCurrentDirectory())
+                            .UseStartup<Startup>()
+                            .Build();
+                host.Run();
             }
+            catch { }
         }
 
         class Startup
         {
-            public static List<Func<WechatContext, string>> ProcessorList;
+            public static List<Func<WechatContext, object>> ProcessorList;
             public Startup(IHostingEnvironment env)
             {
             }
@@ -67,30 +70,41 @@ namespace Bzway.Wechat.MessageServer
         {
 
             private readonly RequestDelegate next;
-            private readonly List<Func<WechatContext, string>> messageProcessor;
-            public MessageProcessorMiddleware(RequestDelegate next, List<Func<WechatContext, string>> messageProcessor)
+            private readonly List<Func<WechatContext, object>> messageProcessor;
+            public MessageProcessorMiddleware(RequestDelegate next, List<Func<WechatContext, object>> messageProcessor)
             {
                 this.next = next;
                 this.messageProcessor = messageProcessor;
             }
             public async Task Invoke(HttpContext context)
             {
-                var result = this.Process(context);
+                WechatContext wechatContext = new WechatContext(context);
+                if (!wechatContext.Signatured)
+                {
+                    await context.Response.WriteAsync(string.Empty);
+                }
+                var echoString = wechatContext.Echo();
+                if (!string.IsNullOrEmpty(echoString))
+                {
+                    await context.Response.WriteAsync(echoString);
+                }
+                wechatContext.Echo();
+                var result = this.Process(wechatContext);
                 if (result.Wait(4900))
                 {
-                    await context.Response.WriteAsync(result.Result);
+                    await context.Response.WriteAsync(result.Result.ToString());
                 }
                 await next(context);
             }
-            Task<string> Process(HttpContext context)
+            Task<object> Process(WechatContext context)
             {
-                WechatContext ctx = new WechatContext(context);
-                Task<string> task = new Task<string>(() =>
+
+                Task<object> task = new Task<object>(() =>
                 {
                     foreach (var item in this.messageProcessor)
                     {
-                        var result = item(ctx);
-                        if (!string.IsNullOrEmpty(result))
+                        var result = item(context);
+                        if (result != null)
                         {
                             return result;
                         }

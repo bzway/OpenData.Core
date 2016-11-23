@@ -1,0 +1,21 @@
+{
+  "buildOptions": {
+    "define": [ "NETCORE" ]
+  },
+  "dependencies": {
+    "NETStandard.Library": "1.6.1"
+  },
+  "frameworks": {
+    "net461": {
+      "dependencies": {
+
+      }
+    },
+    "netstandard1.6": {
+      "imports": "dnxcore50",
+      "buildOptions": { "define": [ "NETCORE" ] },
+      "dependencies": {
+      }
+    }
+  }
+}

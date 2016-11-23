@@ -1,22 +1,21 @@
-{
+﻿{
+  "buildOptions": {
+    "define": [ "NETCORE" ]
+  },
   "dependencies": {
-    "Autofac.Extensions.DependencyInjection": "4.0.0",
-    "Common": "1.0.0-*",
-    "Core": "1.0.0-*",
-    "File": "1.0.0-*",
-    "Microsoft.AspNetCore.Http": "1.0.0",
-    "Microsoft.Extensions.Localization.Abstractions": "1.0.0",
-    "Mongo": "1.0.0-*",
-    "NETStandard.Library": "1.6.0",
-    "Script": "1.0.0-*",
-    "Sql": "1.0.0-*",
-    "System.ComponentModel.Annotations": "4.1.0",
-    "Utility": "1.0.0-*"
+    "NETStandard.Library": "1.6.0"
   },
   "frameworks": {
+    "net461": {
+      "dependencies": {
+
+      }
+    },
     "netstandard1.6": {
-      "imports": "dnxcore50"
+      "imports": "dnxcore50",
+      "buildOptions": { "define": [ "NETCORE" ] },
+      "dependencies": {
+      }
     }
-  },
-  "version": "1.0.0-*"
+  }
 }
