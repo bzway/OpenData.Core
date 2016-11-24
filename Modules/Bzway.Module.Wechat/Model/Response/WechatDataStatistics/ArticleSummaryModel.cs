@@ -10,7 +10,7 @@ namespace Bzway.Module.Wechat.Model
 
 
 
-    public class ArticleSummaryModel
+    public class WechatGetArticleSummaryResponseModel
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<articlelist> list { get; set; }
@@ -41,7 +41,7 @@ namespace Bzway.Module.Wechat.Model
         }
     }
 
-    public class ArticleTotalModel
+    public class WechatGetArticleTotalResponseModel
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<articlelist> list { get; set; }
@@ -113,7 +113,7 @@ namespace Bzway.Module.Wechat.Model
 
     }
 
-    public class ArticleReadModel
+    public class WechatGetArticleReadResponseModel
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<articlelist> list { get; set; }
@@ -143,7 +143,7 @@ namespace Bzway.Module.Wechat.Model
         }
     }
 
-    public class ArticleReadByHourModel
+    public class WechatGetArticleReadByHourResponseModel
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<articlelist> list { get; set; }
@@ -174,7 +174,7 @@ namespace Bzway.Module.Wechat.Model
 
         }
     }
-    public class ArticleShareModel
+    public class WechatGetArticleShareResponseModel
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<articlelist> list { get; set; }
@@ -191,7 +191,7 @@ namespace Bzway.Module.Wechat.Model
         }
     }
 
-    public class ArticleShareByHourModel
+    public class WechatGetArticleShareByHourResponseModel
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<articlelist> list { get; set; }

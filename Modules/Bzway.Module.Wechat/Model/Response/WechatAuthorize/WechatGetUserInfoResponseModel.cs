@@ -7,24 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bzway.Module.Wechat.Model
 {
-    public class WeChatUserModel : ResponesMessage
-    {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int total { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int count { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public Openids data { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string next_openid { get; set; }
-    }
-
-    public class Openids
-    {
-        public List<string> openid { get; set; }
-    }
-
-    public class WeChatUserInfoModel : ResponesMessage
+    public class WechatGetUserInfoResponseModel
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int subscribe { get; set; }
@@ -52,6 +35,6 @@ namespace Bzway.Module.Wechat.Model
         public string remark { get; set; }
         [JsonProperty]
         public int groupid { get; set; }
+        public Array privilege { get; set; }
     }
-
 }

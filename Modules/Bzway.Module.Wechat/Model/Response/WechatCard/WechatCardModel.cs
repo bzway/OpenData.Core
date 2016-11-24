@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bzway.Module.Wechat.Models
+namespace Bzway.Module.Wechat.Model
 {
-    public class WeChatCardModel
+    public class WechatCardModel
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public CCcard card { get; set; }
@@ -155,24 +155,6 @@ namespace Bzway.Module.Wechat.Models
         public QRCodeCard card { get; set; }
     }
 
-    public class OneQrCodeCard
-    {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string action_name { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int expire_seconds { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public OneCardActionInfo action_info { get; set; }
-
-        public override string ToString()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
-    }
-
-
     public class SimpleCard
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -214,7 +196,7 @@ namespace Bzway.Module.Wechat.Models
         }
     }
 
-    public class QRCodeCardResponse : QRCodeResponseModel
+    public class WechatGetQRCodeCardResponseModel : WechatCreateQRCodeTicketResponseModel
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string show_qrcode_url { get; set; }

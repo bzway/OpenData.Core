@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bzway.Module.Wechat.Model
 {
-    public class InterfaceSummaryModel
+    public class WechatGetInterfaceSummaryResponseModel
     {
         public List<InterfaceSummaryList> list { get; set; }
     }

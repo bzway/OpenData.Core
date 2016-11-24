@@ -7,20 +7,21 @@ using System.Threading.Tasks;
 
 namespace Bzway.Module.Wechat.Model
 {
-    public class KFListModel
+    public class WechatGetKFListResponseModel
     {
         public List<kflist> kf_list { get; set; }
+        public class kflist
+        {
+            public string kf_account { get; set; }
+            public string kf_headimgurl { get; set; }
+            public string kf_id { get; set; }
+            public string kf_nick { get; set; }
+            public string kf_wx { get; set; }
+            public string invite_status { get; set; }
+        }
     }
 
-    public class kflist
-    {
-        public string kf_account { get; set; }
-        public string kf_headimgurl { get; set; }
-        public string kf_id { get; set; }
-        public string kf_nick { get; set; }
-        public string kf_wx { get; set; }
-        public string invite_status { get; set; }
-    }
+
 
     public class OpenidToWorkerList
     {
@@ -65,12 +66,12 @@ namespace Bzway.Module.Wechat.Model
         public string content { get; set; }
     }
 
-    public class Media_id 
+    public class Media_id
     {
         public string media_id { get; set; }
     }
 
-    public class CustomSendVideo 
+    public class CustomSendVideo
     {
         public string media_id { get; set; }
         public string thumb_media_id { get; set; }

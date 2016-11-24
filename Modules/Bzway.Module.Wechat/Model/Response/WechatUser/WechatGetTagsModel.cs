@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Bzway.Module.Wechat.Model
 {
-    public class WechatGetTagsModel
+    public class WechatGetTagsResponseModel
     {
         public List<Tag> tags { get; set; }
 

@@ -24,48 +24,48 @@ namespace Bzway.Module.Wechat.Model
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string card_type { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public member_card member_card { get; set; }
+        public membercard member_card { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public general_coupon general_coupon { get; set; }
         public override string ToString()
         {
             return JsonConvert.SerializeObject(this);
         }
+        public class membercard
+        {
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public baseinfo base_info { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public string prerogative { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public bool auto_activate { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public bool wx_activate { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public bool supply_bonus { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public string bonus_url { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public bool supply_balance { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public string balance_url { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public string bonus_cleared { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public string bonus_rules { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public string balance_rules { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public string activate_url { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public custom_cell custom_cell { get; set; }
+        }
     }
 
-    public class member_card
-    {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public base_info base_info { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string prerogative { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public bool auto_activate { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public bool wx_activate { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public bool supply_bonus { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string bonus_url { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public bool supply_balance { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string balance_url { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string bonus_cleared { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string bonus_rules { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string balance_rules { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string activate_url { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public custom_cell custom_cell { get; set; }
-    }
 
     public class general_coupon
     {
-        public base_info base_info { get; set; }
+        public baseinfo base_info { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string default_detail { get; set; }
     }
@@ -80,9 +80,46 @@ namespace Bzway.Module.Wechat.Model
         public string url { get; set; }
 
     }
+ 
+
+    public class ResponsesCard : ResponesMessage
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string card_id { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public bool send_check { get; set; }
+    }
+
+    public class ConsumeCardResponse : ResponesMessage
+    {
+        public cardItem card { get; set; }
+        public class cardItem
+        {
+            public string card_id { get; set; }
+        }
+        public string openid { get; set; }
 
 
-    public class base_info
+    }
+
+    public class DecryptCardResponse : ResponesMessage
+    {
+        public string code { get; set; }
+    }
+
+    public class modifystock
+    {
+        public string card_id { get; set; }
+        public int increase_stock_value { get; set; }
+        public int reduce_stock_value { get; set; }
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
+    }
+
+
+    public class baseinfo
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string logo_url { get; set; }
@@ -101,9 +138,9 @@ namespace Bzway.Module.Wechat.Model
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string description { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public sku sku { get; set; }
+        public skuClass sku { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public date_info date_info { get; set; }
+        public dateinfo date_info { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         //public int fixed_term { get; set; }
         //[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -147,63 +184,24 @@ namespace Bzway.Module.Wechat.Model
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public bool? need_push_on_view { get; set; }
 
-    }
-
-    public class sku
-    {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int quantity { get; set; }
-    }
-
-    public class date_info
-    {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string type { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int fixed_term { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int fixed_begin_term { get; set; }
-         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int begin_timestamp { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int end_timestamp { get; set; }
-    }
-
-    public class ResponsesCard:ResponesMessage
-    {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string card_id { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public bool send_check { get; set; }
-    }
-
-    public class ConsumeCardResponse : ResponesMessage
-    {
-        public cardItem card { get; set; }
-        public class cardItem 
+        public class skuClass
         {
-            public string card_id { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public int quantity { get; set; }
         }
-        public string openid { get; set; }
-
-
-    }
-
-    public class DecryptCardResponse : ResponesMessage
-    {
-        public string code { get; set; }
-    }
-
-    public class modifystock
-    {
-        public string card_id { get; set; }
-        public int increase_stock_value { get; set; }
-        public int reduce_stock_value { get; set; }
-        public override string ToString()
+        public class dateinfo
         {
-            return JsonConvert.SerializeObject(this);
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public string type { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public int fixed_term { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public int fixed_begin_term { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public int begin_timestamp { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public int end_timestamp { get; set; }
         }
     }
 
-   
 }

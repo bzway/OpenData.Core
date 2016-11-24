@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Bzway.Module.Wechat.Model
 {
-    public class UserCumulateModel
+    public class WechatGetUserCumulateResponseModel
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<usercumulatelist> list { get; set; }

@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace Bzway.Module.Wechat.Model
 {
+
     public class MaterialModel
     {
-        [JsonProperty(NullValueHandling=NullValueHandling.Ignore)]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string media_id { get; set; }
-        [JsonProperty(NullValueHandling=NullValueHandling.Ignore)]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int index { get; set; }
         [JsonProperty]
         public List<News_item> articles { get; set; }
@@ -19,6 +20,27 @@ namespace Bzway.Module.Wechat.Model
         public override string ToString()
         {
             return JsonConvert.SerializeObject(this);
+        }
+        public class News_item
+        {
+            [JsonProperty]
+            public string title { get; set; }
+            [JsonProperty]
+            public string thumb_media_id { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public string thumb_url { get; set; }
+            [JsonProperty]
+            public string author { get; set; }
+            [JsonProperty]
+            public string digest { get; set; }
+            [JsonProperty]
+            public int show_cover_pic { get; set; }
+            [JsonProperty]
+            public string content { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public string url { get; set; }
+            [JsonProperty]
+            public string content_source_url { get; set; }
         }
     }
     public class MaterialUpdateModel
@@ -34,66 +56,27 @@ namespace Bzway.Module.Wechat.Model
         {
             return JsonConvert.SerializeObject(this);
         }
+        public class News_item
+        {
+            [JsonProperty]
+            public string title { get; set; }
+            [JsonProperty]
+            public string thumb_media_id { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public string thumb_url { get; set; }
+            [JsonProperty]
+            public string author { get; set; }
+            [JsonProperty]
+            public string digest { get; set; }
+            [JsonProperty]
+            public int show_cover_pic { get; set; }
+            [JsonProperty]
+            public string content { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public string url { get; set; }
+            [JsonProperty]
+            public string content_source_url { get; set; }
+        }
     }
 
-    public class News_item
-    {
-        [JsonProperty]
-        public string title { get; set; }
-        [JsonProperty]
-        public string thumb_media_id { get; set; }
-        [JsonProperty(NullValueHandling=NullValueHandling.Ignore)]
-        public string thumb_url { get; set; }
-        [JsonProperty]
-        public string author { get; set; }
-        [JsonProperty]
-        public string digest { get; set; }
-        [JsonProperty]
-        public int show_cover_pic { get; set; }
-        [JsonProperty]
-        public string content { get; set; }
-        [JsonProperty(NullValueHandling=NullValueHandling.Ignore)]
-        public string url { get; set; }
-        [JsonProperty]
-        public string content_source_url { get; set; }
-    }
-
-    public class MaterialCountResponse
-    {
-        public int voice_count { get; set; }
-        public int video_count { get; set; }
-        public int image_count { get; set; }
-        public int news_count { get; set; }
-    }
-
-    public class MaterialResponse
-    {
-        public List<News_item> news_item { get; set; }
-    }
-
-    public class MaterialListResponse
-    {
-        public int total_count { get; set; }
-        public int item_count { get; set; }
-        public List<Item> item { get; set; }
-    }
-
-    public class Item
-    {
-        [JsonProperty]
-        public string media_id { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public Content content { get; set; }
-        [JsonProperty(NullValueHandling=NullValueHandling.Ignore)]
-        public string name { get; set; }
-        [JsonProperty(NullValueHandling=NullValueHandling.Ignore)]
-        public string update_time { get; set; }
-        [JsonProperty(NullValueHandling=NullValueHandling.Ignore)]
-        public string url { get; set; }
-    }
-
-    public class Content
-    {
-        public List<News_item> news_item { get; set; }
-    }
 }

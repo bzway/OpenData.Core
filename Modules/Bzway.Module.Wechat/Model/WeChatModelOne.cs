@@ -19,9 +19,9 @@ namespace Bzway.Module.Wechat.Model
         [JsonProperty]
         public string scope { get; set; }
     }
- 
 
-    public class GetJsapiTicketModel : ResponesMessage
+
+    public class WechatGetJsapiTicketResponseModel : ResponesMessage
     {
         [JsonProperty]
         public string ticket { get; set; }
@@ -47,7 +47,7 @@ namespace Bzway.Module.Wechat.Model
         public string signature { get; set; }
     }
 
-   
+
     public class UserInfoModel
     {
         public string openId { get; set; }
@@ -61,7 +61,4 @@ namespace Bzway.Module.Wechat.Model
         public string unionId { get; set; }
 
     }
-
-
-
 }
