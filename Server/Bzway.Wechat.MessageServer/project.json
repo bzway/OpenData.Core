@@ -26,7 +26,7 @@
     },
     "netstandard1.6": {
       "imports": "dnxcore50",
-      "buildOptions": { "define": [ "NETCORE" ] },
+     
       "dependencies": {
       }
     }

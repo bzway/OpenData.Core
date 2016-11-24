@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "WechatMessageServer": {
-      "commandName": "Project",
-      "workingDirectory": "D:\\Work\\OpenData.Core\\Server\\WechatMessageServer"
-    }
-  }
-}

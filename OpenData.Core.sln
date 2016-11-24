@@ -48,7 +48,7 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Bzway.Module.Wechat", "Modu
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Bzway.Module.Publisher", "Modules\Bzway.Module.Publisher\Bzway.Module.Publisher.xproj", "{E492D755-424D-48BF-906F-0E22E6D7F327}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Bzway.Server.WechatMessage", "Server\WechatMessageServer\Bzway.Server.WechatMessage.xproj", "{BB8B04E8-6790-4FA7-95E7-97E50765E64C}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Bzway.Server.WechatMessage", "Server\Bzway.Wechat.MessageServer\Bzway.Server.WechatMessage.xproj", "{BB8B04E8-6790-4FA7-95E7-97E50765E64C}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Bzway.Site.BackOffice", "Sites\Bzway.Site.BackOffice\Bzway.Site.BackOffice.xproj", "{710456CA-DE7E-467A-AA6A-BC1E7AE9A6FA}"
 EndProject
