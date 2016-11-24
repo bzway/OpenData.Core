@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using Newtonsoft.Json;
-namespace Accentiv.Spark.Service.Wechat
+namespace Bzway.Module.Wechat.Model
 {
 
     [JsonObject]

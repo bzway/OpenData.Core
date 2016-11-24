@@ -1,0 +1,31 @@
+{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "emitEntryPoint": true
+  },
+
+  "dependencies": {
+    "Bzway.Common.Script": "1.0.0-*",
+    "Bzway.Common.Share": "1.0.0-*",
+    "Bzway.Common.Utility": "1.0.0-*",
+    "Bzway.Data.Core": "1.0.0-*",
+    "Bzway.Data.File": "1.0.0-*",
+    "Bzway.Data.Mongo": "1.0.0-*",
+    "Bzway.Data.Sql": "1.0.0-*",
+    "Bzway.Framework.Application": "1.0.0-*",
+    "Bzway.Framework.Connect": "1.0.0-*",
+    "Bzway.Module.MemberClub": "1.0.0-*",
+    "Bzway.Module.Publisher": "1.0.0-*",
+    "Bzway.Module.Wechat": "1.0.0-*",
+    "Microsoft.NETCore.App": {
+      "type": "platform",
+      "version": "1.0.1"
+    }
+  },
+
+  "frameworks": {
+    "netcoreapp1.0": {
+      "imports": "dnxcore50"
+    }
+  }
+}

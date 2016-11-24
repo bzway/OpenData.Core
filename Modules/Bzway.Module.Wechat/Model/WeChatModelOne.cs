@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using Newtonsoft.Json;
-namespace Accentiv.Spark.Service.Wechat
+namespace Bzway.Module.Wechat.Model
 {
     public class WeChatModelOne
     {
@@ -19,15 +19,7 @@ namespace Accentiv.Spark.Service.Wechat
         [JsonProperty]
         public string scope { get; set; }
     }
-
-    public class GetAccessTokenModel
-    {
-        [JsonProperty]
-        public string access_token { get; set; }
-        [JsonProperty]
-        public int expires_in { get; set; }
-
-    }
+ 
 
     public class GetJsapiTicketModel : ResponesMessage
     {
@@ -55,18 +47,7 @@ namespace Accentiv.Spark.Service.Wechat
         public string signature { get; set; }
     }
 
-    public class AccessCodeModel
-    {
-        [JsonProperty(PropertyName = "access_token")]
-        public string accessToken { get; set; }
-        [JsonProperty(PropertyName = "expires_in")]
-        public string expiresIn { get; set; }
-        [JsonProperty(PropertyName = "refresh_token")]
-        public string refreshToken { get; set; }
-        public string openId { get; set; }
-        public string scope { get; set; }
-        public string unionId { get; set; }
-    }
+   
     public class UserInfoModel
     {
         public string openId { get; set; }
@@ -80,16 +61,7 @@ namespace Accentiv.Spark.Service.Wechat
         public string unionId { get; set; }
 
     }
-    public class RefershAccessTokenModel
-    {
-        [JsonProperty(PropertyName = "access_token")]
-        public string accessToken { get; set; }
-        [JsonProperty(PropertyName = "expires_in")]
-        public string expiresIn { get; set; }
-        [JsonProperty(PropertyName = "refresh_token")]
-        public string refreshToken { get; set; }
-        public string openID { get; set; }
-        public string scope { get; set; }
-    }
+
+
 
 }

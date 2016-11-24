@@ -1,5 +1,5 @@
-﻿using Accentiv.Spark.Service.Wechat;
-using Bzway.Module.Wechat.Model;
+﻿using Bzway.Module.Wechat.Model;
+using Bzway.Module.Wechat.Models;
 
 namespace Bzway.Module.Wechat.Interface
 {
@@ -32,7 +32,7 @@ namespace Bzway.Module.Wechat.Interface
         string DeleteMenu();
         string DeletePoi(string poi_id);
         string GetAccessToken();
-        AccessCodeModel GetAccessTokenByCode(string appId, string appSecurityKey, string code);
+        GetAccessTokenModel GetAccessTokenByCode(string appId, string appSecurityKey, string code);
         string GetAllGroups();
         ArticleSummaryModel GetArticleSummary(string start, string end);
         ArticleTotalModel GetArticleTotal(string start, string end);
