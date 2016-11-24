@@ -17,10 +17,7 @@
     "Bzway.Module.MemberClub": "1.0.0-*",
     "Bzway.Module.Publisher": "1.0.0-*",
     "Bzway.Module.Wechat": "1.0.0-*",
-    "Microsoft.NETCore.App": {
-      "type": "platform",
-      "version": "1.0.1"
-    }
+    "Microsoft.NETCore.App": "1.1.0"
   },
 
   "frameworks": {
