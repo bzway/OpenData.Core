@@ -1,0 +1,17 @@
+[
+
+  {
+    "Token": "test",
+    "EncodingAESKey": "test",
+    "AppID": "test",
+    "AppSecret": "test",
+    "Name": "test",
+    "OpenId": "test",
+    "IsServiceAccount": true,
+    "CreatedBy": "system",
+    "CreatedOn": "2016-11-27T12:18:40.0597291Z",
+    "Id": "1",
+    "UpdatedBy": "system",
+    "UpdatedOn": "2016-11-27T12:18:40.0597291Z"
+  }
+]

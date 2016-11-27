@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Bzway.Module.Wechat.Entity;
 using Bzway.Data.Core;
 using Microsoft.Extensions.Logging;
 using Bzway.Framework.Application;
-using Bzway.Framework.Application.Entity;
 using Newtonsoft.Json;
 using System.Net.Http;
 using Bzway.Module.Wechat.Model;
@@ -13,20 +10,18 @@ using System.IO;
 using System.Threading.Tasks;
 using Bzway.Common.Utility;
 using System.Text;
+using Bzway.Common.Share;
+using Bzway.Module.Wechat.Interface;
 
 namespace Bzway.Module.Wechat.Service
 {
-    public class WechatApiService : BaseService<WechatService>
+    public class WechatApiService : BaseService<WechatService>, IWechatApiService
     {
         #region ctor
         private static HttpClient webClient = new HttpClient();
-        private string appId = "wx8aea35acb51b7625";
-        private string AppSecret = "b6031d9dd6e231f0f91a898574080dca";
+        public WechatApiService(ILoggerFactory loggerFactory, ITenant tenant) : base(loggerFactory, tenant) { }
 
-        public WechatApiService(ILoggerFactory loggerFactory, Site site) : base(loggerFactory, site) { }
-
-
-        private string Post(string url, string data)
+        private string WebGet(string url, string data)
         {
             try
             {
@@ -42,17 +37,47 @@ namespace Bzway.Module.Wechat.Service
                 return null;
             }
         }
+        public string CurrentWechatId
+        {
+            get
+            {
+                return this.tenant.GetContext().Request.Query["Id"];
+            }
+        }
         private string GetAccessToken()
         {
             try
             {
-                var url = string.Format("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={0}&secret={1}", this.appId, this.AppSecret);
-                var result = webClient.GetStringAsync(url).Result;
-                return JsonConvert.DeserializeObject<wechatGetUserAccessTokenResponseModel>(result).accessToken;
+                var cache = AppEngine.Current.Get<ICacheManager>();
+                var accessToken = cache.Get<string>("Wechat.AccessToken." + this.CurrentWechatId, () =>
+                 {
+                     var currentWechatOffianalAccount = cache.Get<WechatOfficialAccount>("Wechat.OfficialAccount" + this.CurrentWechatId, () =>
+                     {
+                         return this.db.Entity<WechatOfficialAccount>().Query().Where(m => m.Id, this.CurrentWechatId, CompareType.Equal).First();
+                     });
+                     if (currentWechatOffianalAccount == null)
+                     {
+                         return string.Empty;
+                     }
+                     var url = string.Format("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={0}&secret={1}", currentWechatOffianalAccount.AppID, currentWechatOffianalAccount.AppSecret);
+                     var result = webClient.GetStringAsync(url).Result;
+                     if (string.IsNullOrEmpty(result))
+                     {
+                         return string.Empty;
+                     }
+                     var response = JsonConvert.DeserializeObject<wechatGetUserAccessTokenResponseModel>(result);
+                     if (response == null || response.HasError)
+                     {
+                         this.logger.LogError(response.errmsg);
+                         return string.Empty;
+                     }
+                     return response.accessToken;
+                 }, 60 * 60 * 2);
+                return accessToken;
             }
             catch (Exception ex)
             {
-                this.logger.LogError("WeChatHttps.GetAccessToken{0}", ex);
+                this.logger.LogError("WechatServiceHelper.GetAccessToken:{0}", ex);
                 return null;
             }
 
@@ -66,7 +91,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + this.GetAccessToken();
                 var request = menu.ToString();
-                string result = this.Post(url, request);
+                string result = this.WebGet(url, request);
                 var respone = JsonConvert.DeserializeObject<WechatCreateMenuResponseModel>(result);
                 return respone.HasError;
             }
@@ -84,7 +109,7 @@ namespace Bzway.Module.Wechat.Service
                 var url = "https://api.weixin.qq.com/cgi-bin/menu/get?access_token=" + this.GetAccessToken();
 
 
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(url, ""));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(url, ""));
 
 
                 return respone;
@@ -104,7 +129,7 @@ namespace Bzway.Module.Wechat.Service
 
                 var state = Guid.NewGuid().ToString("N");
 
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
                 return respone;
             }
             catch (Exception ex)
@@ -120,7 +145,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "addConditionalMenu", data = menu.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
                 return respone;
             }
             catch (Exception ex)
@@ -139,7 +164,7 @@ namespace Bzway.Module.Wechat.Service
 
                 var state = Guid.NewGuid().ToString("N");
 
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
                 return respone;
             }
             catch (Exception ex)
@@ -157,7 +182,7 @@ namespace Bzway.Module.Wechat.Service
 
                 var state = Guid.NewGuid().ToString("N");
 
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
                 return respone;
             }
             catch (Exception ex)
@@ -177,7 +202,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "getKFList", data = "" };
                 var state = Guid.NewGuid().ToString("N");
-                var model = JsonConvert.DeserializeObject<WechatGetKFListResponseModel>(this.Post(state, request.ToString()));
+                var model = JsonConvert.DeserializeObject<WechatGetKFListResponseModel>(this.WebGet(state, request.ToString()));
                 return model;
 
             }
@@ -195,7 +220,7 @@ namespace Bzway.Module.Wechat.Service
 
                 var request = new WechatPostRequest() { functionName = "customSend", data = custom.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -212,7 +237,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "sendMsgByUserGroup", data = byGroup.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -229,7 +254,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "sendMsgByOpenid", data = byOpenId.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -248,7 +273,7 @@ namespace Bzway.Module.Wechat.Service
 
                 var state = Guid.NewGuid().ToString("N");
 
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -266,7 +291,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"msg_id\":\"" + msgId + "\"}";
                 var request = new WechatPostRequest() { functionName = "deleteGroupMsg", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -283,7 +308,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "sendTemplate", data = template.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -306,7 +331,7 @@ namespace Bzway.Module.Wechat.Service
             try
             {
                 var url = string.Format("https://api.weixin.qq.com/sns/oauth2/access_token?appid={0}&secret={1}&code={2}&grant_type=authorization_code", appId, appSecurityKey, code);
-                var respone = JsonConvert.DeserializeObject<wechatGetUserAccessTokenResponseModel>(this.Post(url, ""));
+                var respone = JsonConvert.DeserializeObject<wechatGetUserAccessTokenResponseModel>(this.WebGet(url, ""));
                 return respone;
             }
             catch (Exception ex)
@@ -337,7 +362,7 @@ namespace Bzway.Module.Wechat.Service
                 var request = new WechatPostRequest() { functionName = "getJsapiTicket", data = "" };
 
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetJsapiTicketResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetJsapiTicketResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -356,7 +381,7 @@ namespace Bzway.Module.Wechat.Service
 
                 var state = Guid.NewGuid().ToString("N");
 
-                var respone = JsonConvert.DeserializeObject<WechatGetJsapiTicketResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetJsapiTicketResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -376,7 +401,7 @@ namespace Bzway.Module.Wechat.Service
 
                 var state = Guid.NewGuid().ToString("N");
 
-                var respone = JsonConvert.DeserializeObject<WechatGetUserInfoResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetUserInfoResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -397,7 +422,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "createMaterial", data = material.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -415,7 +440,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"media_id\":\"" + mediaId + "\"}";
                 var request = new WechatPostRequest() { functionName = "getMaterial", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetMaterialResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetMaterialResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -433,7 +458,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"media_id\":\"" + mediaId + "\"}";
                 var request = new WechatPostRequest() { functionName = "deleteMaterial", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -450,7 +475,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "updateMaterial", data = material.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -466,7 +491,7 @@ namespace Bzway.Module.Wechat.Service
             try
             {
                 var url = "https://api.weixin.qq.com/cgi-bin/material/get_materialcount?access_token=" + this.GetAccessToken();
-                var respone = JsonConvert.DeserializeObject<WechatGetMaterialCountResponseModel>(this.Post(url, ""));
+                var respone = JsonConvert.DeserializeObject<WechatGetMaterialCountResponseModel>(this.WebGet(url, ""));
                 return respone;
             }
             catch (Exception ex)
@@ -489,7 +514,7 @@ namespace Bzway.Module.Wechat.Service
                 var url = "https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=" + this.GetAccessToken();
                 var data = new { type = type, offset = offset, count = count };
                 var request = JsonConvert.SerializeObject(data);
-                var reuqest = this.Post(url, request);
+                var reuqest = this.WebGet(url, request);
                 var model = JsonConvert.DeserializeObject<WechatGetMaterialListResponse>(reuqest);
                 return model;
             }
@@ -511,7 +536,7 @@ namespace Bzway.Module.Wechat.Service
                 var url = "https://api.weixin.qq.com/cgi-bin/tags/create?access_token=" + this.GetAccessToken();
                 var data = new { tag = new { name = name } };
                 var request = JsonConvert.SerializeObject(data);
-                var respone = JsonConvert.DeserializeObject<WechatCreateTagResponseModel>(this.Post(url, request));
+                var respone = JsonConvert.DeserializeObject<WechatCreateTagResponseModel>(this.WebGet(url, request));
                 return respone.tag.id;
             }
             catch (Exception ex)
@@ -529,7 +554,7 @@ namespace Bzway.Module.Wechat.Service
 
                 var state = "https://api.weixin.qq.com/cgi-bin/tags/get?access_token=" + this.GetAccessToken();
 
-                var respone = JsonConvert.DeserializeObject<WechatGetTagsResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetTagsResponseModel>(this.WebGet(state, request.ToString()));
                 return respone;
             }
             catch (Exception ex)
@@ -546,7 +571,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"openid\":\"" + openId + "\"}";
                 var request = new WechatPostRequest() { functionName = "getMemberGroup", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -564,7 +589,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"group\":{\"id\":" + groupId + ",\"name\":\"" + groupName + "\"}}";
                 var request = new WechatPostRequest() { functionName = "updateGroup", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -582,7 +607,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"openid\":\"" + openId + "\",\"to_groupid\":" + toGroupId + "}";
                 var request = new WechatPostRequest() { functionName = "moveMemberGroup", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -599,7 +624,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "batchMoveMemberGroup", data = batchGroup.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -617,7 +642,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"group\":{\"id\":" + groupId + "}}";
                 var request = new WechatPostRequest() { functionName = "deleteGroup", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -635,7 +660,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"openid\":\"" + openId + "\",\"remark\":\"" + remark + "\"}";
                 var request = new WechatPostRequest() { functionName = "updateRemark", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -652,7 +677,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "getDetailUserInfoList", data = batchUserInfo.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -672,7 +697,7 @@ namespace Bzway.Module.Wechat.Service
 
                 var state = Guid.NewGuid().ToString("N");
 
-                var respone = JsonConvert.DeserializeObject<WeChatGetUserListResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WeChatGetUserListResponseModel>(this.WebGet(state, request.ToString()));
 
 
                 return respone;
@@ -693,7 +718,7 @@ namespace Bzway.Module.Wechat.Service
 
                 var state = Guid.NewGuid().ToString("N");
 
-                var respone = JsonConvert.DeserializeObject<WechatGetUserInfoResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetUserInfoResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -714,7 +739,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "createQRCodeTicket", data = qrCode.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatCreateQRCodeTicketResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatCreateQRCodeTicketResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -741,7 +766,7 @@ namespace Bzway.Module.Wechat.Service
                 var data = new { action = "long2short", long_url = "" };
                 var request = JsonConvert.SerializeObject(data);
                 var state = "https://api.weixin.qq.com/cgi-bin/shorturl?access_token=" + this.GetAccessToken();
-                var respone = JsonConvert.DeserializeObject<WechatCreateFShortUrlResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatCreateFShortUrlResponseModel>(this.WebGet(state, request.ToString()));
                 return respone;
             }
             catch (Exception ex)
@@ -762,7 +787,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"begin_date\": \"" + start + "\", \"end_date\": \"" + end + "\"}";
                 var request = new WechatPostRequest() { functionName = "getUserSummary", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetUserCumulateResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetUserCumulateResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -780,7 +805,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"begin_date\": \"" + start + "\", \"end_date\": \"" + end + "\"}";
                 var request = new WechatPostRequest() { functionName = "getUserCumulate", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetUserCumulateResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetUserCumulateResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -798,7 +823,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"begin_date\": \"" + start + "\", \"end_date\": \"" + end + "\"}";
                 var request = new WechatPostRequest() { functionName = "getArticleSummary", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetArticleSummaryResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetArticleSummaryResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -816,7 +841,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"begin_date\": \"" + start + "\", \"end_date\": \"" + end + "\"}";
                 var request = new WechatPostRequest() { functionName = "getArticleTotal", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetArticleTotalResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetArticleTotalResponseModel>(this.WebGet(state, request.ToString()));
                 return respone;
             }
             catch (Exception ex)
@@ -833,7 +858,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"begin_date\": \"" + start + "\", \"end_date\": \"" + end + "\"}";
                 var request = new WechatPostRequest() { functionName = "getUserRead", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetArticleReadResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetArticleReadResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -851,7 +876,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"begin_date\": \"" + start + "\", \"end_date\": \"" + end + "\"}";
                 var request = new WechatPostRequest() { functionName = "getUserReadHour", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetArticleReadByHourResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetArticleReadByHourResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -869,7 +894,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"begin_date\": \"" + start + "\", \"end_date\": \"" + end + "\"}";
                 var request = new WechatPostRequest() { functionName = "getUserShare", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetArticleShareResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetArticleShareResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -887,7 +912,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"begin_date\": \"" + start + "\", \"end_date\": \"" + end + "\"}";
                 var request = new WechatPostRequest() { functionName = "getUserShareHour", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetArticleShareByHourResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetArticleShareByHourResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -905,7 +930,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"begin_date\": \"" + start + "\", \"end_date\": \"" + end + "\"}";
                 var request = new WechatPostRequest() { functionName = "getUpStreamMsg", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetUpStreamMsgResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetUpStreamMsgResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -923,7 +948,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"begin_date\": \"" + start + "\", \"end_date\": \"" + end + "\"}";
                 var request = new WechatPostRequest() { functionName = "getUpStreamMsgByHour", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetUpStreamMsgResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetUpStreamMsgResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -941,7 +966,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"begin_date\": \"" + start + "\", \"end_date\": \"" + end + "\"}";
                 var request = new WechatPostRequest() { functionName = "getUpStreamMsgByWeek", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetUpStreamMsgResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetUpStreamMsgResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -959,7 +984,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"begin_date\": \"" + start + "\", \"end_date\": \"" + end + "\"}";
                 var request = new WechatPostRequest() { functionName = "getUpStreamMsgByMonth", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetUpStreamMsgResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetUpStreamMsgResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -977,7 +1002,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"begin_date\": \"" + start + "\", \"end_date\": \"" + end + "\"}";
                 var request = new WechatPostRequest() { functionName = "getUpStreamMsgDist", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetUpStreamMsgResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetUpStreamMsgResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -995,7 +1020,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"begin_date\": \"" + start + "\", \"end_date\": \"" + end + "\"}";
                 var request = new WechatPostRequest() { functionName = "getUpStreamMsgDistByWeek", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetUpStreamMsgResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetUpStreamMsgResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1013,7 +1038,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"begin_date\": \"" + start + "\", \"end_date\": \"" + end + "\"}";
                 var request = new WechatPostRequest() { functionName = "getUpStreamMsgDistByMonth", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetUpStreamMsgResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetUpStreamMsgResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1031,7 +1056,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"begin_date\": \"" + start + "\", \"end_date\": \"" + end + "\"}";
                 var request = new WechatPostRequest() { functionName = "getInterfaceSummary", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetInterfaceSummaryResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetInterfaceSummaryResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1050,7 +1075,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"begin_date\": \"" + start + "\", \"end_date\": \"" + end + "\"}";
                 var request = new WechatPostRequest() { functionName = "getInterfaceSummaryByHour", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetInterfaceSummaryResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetInterfaceSummaryResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1072,7 +1097,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "createCards", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1090,7 +1115,7 @@ namespace Bzway.Module.Wechat.Service
 
                 var request = new WechatPostRequest() { functionName = "getCardQrCode", data = action_name.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetQRCodeCardResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetQRCodeCardResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1107,7 +1132,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "getCardQrCode", data = cardList.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetQRCodeCardResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatGetQRCodeCardResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1125,7 +1150,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"card_id\": \"" + cardId + "\"}";
                 var request = new WechatPostRequest() { functionName = "getCardStatus", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WeChatMemberCard>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WeChatMemberCard>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1143,7 +1168,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "updateCard", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1163,7 +1188,7 @@ namespace Bzway.Module.Wechat.Service
                 var url = "https://api.weixin.qq.com/card/modifystock?access_token=" + accessToken;
                 var request = new WechatPostRequest() { functionName = url, data = stock.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1182,7 +1207,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"card_id\": \"" + cardId + "\"}";
                 var request = new WechatPostRequest() { functionName = "deleteCard", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1200,7 +1225,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"card_id\": \"" + cardId + "\"}";
                 var request = new WechatPostRequest() { functionName = "grantCard", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1217,7 +1242,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "activateCard", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1237,7 +1262,7 @@ namespace Bzway.Module.Wechat.Service
 
                 var request = new WechatPostRequest() { functionName = "https://api.weixin.qq.com/card/code/consume?access_token={0}", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1259,7 +1284,7 @@ namespace Bzway.Module.Wechat.Service
 
                 var request = new WechatPostRequest() { functionName = "https://api.weixin.qq.com/card/code/decrypt?access_token={0}", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1281,7 +1306,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "createPoi", data = model.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1298,7 +1323,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"poi_id\":\"" + poi_id + "\"}";
                 var request = new WechatPostRequest() { functionName = "getPoi", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<PoiResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<PoiResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1316,7 +1341,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"begin\": \"" + begin + "\", \"limit\": \"" + limit + "\"}";
                 var request = new WechatPostRequest() { functionName = "getPoiList", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<PoiListResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<PoiListResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1333,7 +1358,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "updatePoi", data = model.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1351,7 +1376,7 @@ namespace Bzway.Module.Wechat.Service
                 string data = "{\"poi_id\":\"" + poi_id + "\"}";
                 var request = new WechatPostRequest() { functionName = "deletePoi", data = data };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1368,7 +1393,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "getWxCategory", data = "" };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<PoiCategoryResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<PoiCategoryResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1391,7 +1416,7 @@ namespace Bzway.Module.Wechat.Service
 
                 var state = Guid.NewGuid().ToString("N");
 
-                var respone = JsonConvert.DeserializeObject<OnLineKFModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<OnLineKFModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1408,7 +1433,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "createCustom", data = custom.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1425,7 +1450,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "invitationCustom", data = custom.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1464,7 +1489,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "updateCustom", data = custom.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1483,7 +1508,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = string.Format("https://api.weixin.qq.com/customservice/kfaccount/del?access_token={0}&kf_account={1}", AccessToken, custom.kf_account) };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1500,7 +1525,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "opendialogue", data = session.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1518,7 +1543,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "closedialogue", data = session.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
                 return respone;
             }
             catch (Exception ex)
@@ -1538,7 +1563,7 @@ namespace Bzway.Module.Wechat.Service
 
                 var state = Guid.NewGuid().ToString("N");
 
-                var respone = JsonConvert.DeserializeObject<KFSessionResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<KFSessionResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1555,7 +1580,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "getMsgRecord", data = record.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<MsgRecordModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<MsgRecordModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1577,7 +1602,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "register", data = model.ToString() };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }
@@ -1594,7 +1619,7 @@ namespace Bzway.Module.Wechat.Service
             {
                 var request = new WechatPostRequest() { functionName = "auditStatus", data = "" };
                 var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<AuditStatusResponseModel>(this.Post(state, request.ToString()));
+                var respone = JsonConvert.DeserializeObject<AuditStatusResponseModel>(this.WebGet(state, request.ToString()));
 
                 return respone;
             }

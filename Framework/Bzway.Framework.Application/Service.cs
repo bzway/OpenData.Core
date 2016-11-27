@@ -9,12 +9,13 @@ namespace Bzway.Framework.Application
     {
         #region ctor
         protected readonly ILogger<T> logger;
-        protected readonly Site site;
+        protected readonly ITenant tenant;
         protected readonly IDatabase db;
-        public BaseService(ILoggerFactory loggerFactory, Site site)
+        public BaseService(ILoggerFactory loggerFactory, ITenant tenant)
         {
             this.logger = loggerFactory.CreateLogger<T>();
-            this.db = OpenDatabase.GetDatabase(site.ProviderName, site.ConnectionString, site.DatabaseName);
+            this.tenant = tenant;
+            this.db = this.tenant.GetDatabase();
         }
         #endregion
     }

@@ -1,22 +1,21 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Bzway.Site.FrontPage.Services;
-using Bzway.Framework.Application;
-using Bzway.Framework.Connect.Authentication;
-using System;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using Bzway.Common.Utility;
+﻿using Bzway.Common.Utility;
 using Bzway.Data.Core;
 using Bzway.Data.JsonFile;
+using Bzway.Framework.Application;
+using Bzway.Framework.Connect.Authentication;
+using Bzway.Site.FrontPage.Services;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using System;
 
 namespace Bzway.Site.FrontPage
 {
     public class Startup
     {
+        IServiceCollection services;
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -54,12 +53,11 @@ namespace Bzway.Site.FrontPage
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
             services.AddTransient<ISiteService, SiteService>();
-            this.AppServices = services;
             AppEngine.Current.Register<IDatabase, FileDatabase>("Default");
+            this.services = services;
             return AppEngine.Current.Build(services);
-
         }
-        IServiceCollection AppServices { get; set; }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
@@ -82,10 +80,18 @@ namespace Bzway.Site.FrontPage
             //app.UseCookieAuthentication(new CookieAuthenticationOptions() { });
             app.UseStaticFiles();
             //app.UseIdentity();
-            app.UseMiddleware<UserSiteMiddleware>(this.AppServices);
+            app.UseMiddleware<TenantMiddleware>(services);
             app.UseBzwayCookieAuthentication();
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
-            app.UseMvcWithDefaultRoute();
+            app.UseMvc(routes =>
+            {
+                //Front Page
+                routes.MapRoute(
+                    name: "Page",
+                    template: "{*PageUrl}",
+                    defaults: new { controller = "FrontPage", action = "Index", PageUrl = "" }
+                );
+            });
         }
     }
 }

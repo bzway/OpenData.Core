@@ -118,7 +118,8 @@ namespace Bzway.Data.Core
                 case ExpressionType.GreaterThan:
                     type = CompareType.GreaterThan;
                     break;
-                default: type = CompareType.Equal;
+                default:
+                    type = CompareType.Equal;
                     break;
 
             }
@@ -153,7 +154,8 @@ namespace Bzway.Data.Core
         public T First()
         {
             this.CallExpression = new CallExpression(CallType.First);
-            return (T)this.Repository.Execute(this);
+            var result = (T)this.Repository.Execute(this);
+            return result;
         }
         public T Last()
         {

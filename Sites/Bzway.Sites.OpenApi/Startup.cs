@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Bzway.Framework.Application;
 
 namespace Bzway.Sites.OpenApi
 {
@@ -29,14 +30,15 @@ namespace Bzway.Sites.OpenApi
         {
             // Add framework services.
             services.AddMvc();
+            this.services = services;
         }
-
+        IServiceCollection services;
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
+            app.UseMiddleware<TenantMiddleware>(services);
             app.UseMvc();
         }
     }

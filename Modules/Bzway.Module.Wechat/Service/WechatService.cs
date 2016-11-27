@@ -12,7 +12,7 @@ namespace Bzway.Module.Wechat.Service
     public class WechatService : BaseService<WechatService>
     {
         #region ctor
-        public WechatService(ILoggerFactory loggerFactory, Site site) : base(loggerFactory, site) { }
+        public WechatService(ILoggerFactory loggerFactory, ITenant tenant) : base(loggerFactory, tenant) { }
         #endregion
 
         public IEnumerable<WechatKeyword> GetWechatResponse(string Keyword = "", SearchType SearchType = SearchType.None, string wechatId = "")

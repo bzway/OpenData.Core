@@ -26,14 +26,15 @@ namespace Bzway.Framework.Application
         public Task Invoke(HttpContext context)
         {
             //find tenant by host name
-            var appTenant = context.RequestServices.GetService<ISiteService>();
-            if (appTenant == null)
+            var siteService = context.RequestServices.GetService<ISiteService>();
+            if (siteService == null)
             {
                 throw new NotSupportedException("App Service is not registered");
             }
-            var site = appTenant.FindSiteByDomain(context.Request.Host.Value);
+            var site = siteService.FindSiteByDomain(context.Request.Host.Value);
+
             //try to get ServiceProvider for this site
-            context.RequestServices = TryGetTenantServiceProvider(appTenant, site);
+            context.RequestServices = TryGetTenantServiceProvider(siteService, site);
             return next(context);
         }
 
@@ -48,10 +49,12 @@ namespace Bzway.Framework.Application
             {
                 if (!serviceProviderCache.ContainsKey(site.Name))
                 {
-                   
+
                     var containerBuilder = new ContainerBuilder();
                     containerBuilder.Populate(gloabServices);
+
                     ServiceCollection services = new ServiceCollection();
+                   
                     containerBuilder.Populate(services);
                     containerBuilder.RegisterAssemblyModules();
                     var container = containerBuilder.Build();

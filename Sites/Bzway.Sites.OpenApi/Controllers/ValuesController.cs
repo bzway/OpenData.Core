@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Bzway.Framework.Application;
 
 namespace Bzway.Sites.OpenApi.Controllers
 {
@@ -24,7 +25,9 @@ namespace Bzway.Sites.OpenApi.Controllers
         [HttpGet("{id}")]
         public string Get(int id)
         {
-            return "value";
+            var tenant = (ITenant)this.HttpContext.RequestServices.GetService(typeof(ITenant));
+
+            return tenant.GetContext();
         }
 
         // POST api/values
