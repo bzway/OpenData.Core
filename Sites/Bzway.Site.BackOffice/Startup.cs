@@ -52,8 +52,9 @@ namespace Bzway.Site.BackOffice
 
             // Add application services.
             services.AddTransient<IWechatApiService, WechatApiService>();
+            services.AddTransient<IWechatService, WechatService>();
             services.AddTransient<ICacheManager, DefaultCache>();
-            
+
             this.services = services;
             AppEngine.Current.Register<IDatabase, FileDatabase>("Default");
             return AppEngine.Current.Build(services);

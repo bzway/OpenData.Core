@@ -6,7 +6,8 @@
     "NETStandard.Library": "1.6.1",
     "StackExchange.Redis": "1.1.608",
     "Microsoft.Extensions.Caching.Memory": "1.1.0",
-    "Newtonsoft.Json": "9.0.1"
+    "Newtonsoft.Json": "9.0.1",
+    "PagedList.Core": "1.17.4"
   },
   "frameworks": {
     "net461": {

@@ -85,6 +85,8 @@ namespace Bzway.Module.Wechat.Entity
     /// </summary>
     public enum WechatMaterialType
     {
+
+        All,
         /// <summary>
         /// 图片
         /// </summary>

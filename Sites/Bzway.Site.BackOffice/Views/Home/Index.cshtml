@@ -1,4 +1,13 @@
-﻿@{
+﻿@model PagedList<Bzway.Module.Wechat.Entity.WechatMaterial>
+@{
     ViewData["Title"] = "Home Page";
 }
-<a></a> 
+<table>
+    @foreach (var item in this.Model)
+    {
+        <tr>
+            <td>@item.MediaId</td>
+            <td>@item.Type</td>
+        </tr>
+    }
+</table>

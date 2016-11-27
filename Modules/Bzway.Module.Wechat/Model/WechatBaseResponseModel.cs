@@ -12,6 +12,6 @@ namespace Bzway.Module.Wechat
         [JsonProperty(PropertyName = "errmsg")]
         public string errmsg { get; set; }
         [JsonIgnore]
-        public bool HasError { get { return this.errcode == 0; } }
+        public bool HasError { get { return this.errcode > 0; } }
     }
 }

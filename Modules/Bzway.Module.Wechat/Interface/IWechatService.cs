@@ -1,22 +1,27 @@
-﻿using Bzway.Module.Wechat.Entity;
+﻿using Bzway.Common.Collections;
+using Bzway.Module.Wechat.Entity;
 using System.Collections.Generic;
 using System.Linq;
 
-public interface IWechatService
+namespace Bzway.Module.Wechat.Interface
 {
-    #region User
-    IQueryable<WechatUserGroup> GetAllTags();
+    public interface IWechatService
+    {
+        #region User
+        IQueryable<WechatUserGroup> GetAllTags();
 
-    IQueryable<WechatUser> GetUsers();
+        IQueryable<WechatUser> GetUsers();
 
-    #endregion
-    #region Menu
+        #endregion
+        #region Menu
 
 
-    #endregion
+        #endregion
+        void SyncMaterial();
+        #region Keyword
 
-    #region Keyword
-
-    IEnumerable<WechatKeyword> GetWechatResponse(string Keyword = "", SearchType SearchType = SearchType.None, string wechatId = "");
-    #endregion
+        IEnumerable<WechatKeyword> GetWechatResponse(string Keyword = "", SearchType SearchType = SearchType.None, string wechatId = "");
+        IPagedList<WechatMaterial> GetWechatMaterils(string keyword = "", WechatMaterialType news = WechatMaterialType.All, int index = 0, int pageSize = 10);
+        #endregion
+    }
 }
