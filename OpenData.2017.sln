@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.25920.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{272622DD-2DAA-4C98-B5A3-D42CFAF8EE74}"
 	ProjectSection(SolutionItems) = preProject
@@ -22,47 +22,47 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sites", "Sites", "{E9CB29EC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{87F80724-B566-4089-9511-C7703C28B2F4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Common.Share", "Common\Bzway.Common.Share\Bzway.Common.Share.xproj", "{1F754992-13CB-40F8-89C1-F4F7B9D38166}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Common.Share", "Common\Bzway.Common.Share\Bzway.Common.Share.csproj", "{1F754992-13CB-40F8-89C1-F4F7B9D38166}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Common.Script", "Common\Bzway.Common.Script\Bzway.Common.Script.xproj", "{C4F05E7D-46F0-4B8F-A457-9D5BD98FB626}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Common.Script", "Common\Bzway.Common.Script\Bzway.Common.Script.csproj", "{C4F05E7D-46F0-4B8F-A457-9D5BD98FB626}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Common.Utility", "Common\Bzway.Common.Utility\Bzway.Common.Utility.xproj", "{D3A10611-3E72-4FA9-ABD6-AA753346A807}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Common.Utility", "Common\Bzway.Common.Utility\Bzway.Common.Utility.csproj", "{D3A10611-3E72-4FA9-ABD6-AA753346A807}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Data.Core", "Data\Bzway.Data.Core\Bzway.Data.Core.xproj", "{3531115B-1D09-44A5-B313-95617CE09279}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Data.Core", "Data\Bzway.Data.Core\Bzway.Data.Core.csproj", "{3531115B-1D09-44A5-B313-95617CE09279}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Data.File", "Data\Bzway.Data.File\Bzway.Data.File.xproj", "{DAA35876-4F16-4A6B-B91C-0FE8686CBA57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Data.File", "Data\Bzway.Data.File\Bzway.Data.File.csproj", "{DAA35876-4F16-4A6B-B91C-0FE8686CBA57}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Data.Mongo", "Data\Bzway.Data.Mongo\Bzway.Data.Mongo.xproj", "{C583980D-97DD-4DF9-97DF-50613284252E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Data.Mongo", "Data\Bzway.Data.Mongo\Bzway.Data.Mongo.csproj", "{C583980D-97DD-4DF9-97DF-50613284252E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Data.Sql", "Data\Bzway.Data.Sql\Bzway.Data.Sql.xproj", "{5EF66676-34BC-46BD-808F-D136E4128BF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Data.Sql", "Data\Bzway.Data.Sql\Bzway.Data.Sql.csproj", "{5EF66676-34BC-46BD-808F-D136E4128BF9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Framework.Application", "Framework\Bzway.Framework.Application\Bzway.Framework.Application.xproj", "{1B9518AF-AC05-4582-B736-7E9AE2CE7D97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Framework.Application", "Framework\Bzway.Framework.Application\Bzway.Framework.Application.csproj", "{1B9518AF-AC05-4582-B736-7E9AE2CE7D97}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Framework.Connect", "Framework\Bzway.Framework.Connect\Bzway.Framework.Connect.xproj", "{341BBE6A-158F-4CF3-96F4-AD5E945F7EB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Framework.Connect", "Framework\Bzway.Framework.Connect\Bzway.Framework.Connect.csproj", "{341BBE6A-158F-4CF3-96F4-AD5E945F7EB0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Framework.Content", "Framework\Bzway.Framework.Content\Bzway.Framework.Content.xproj", "{D257D947-F730-4F8E-AB29-54441941D73E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Framework.Content", "Framework\Bzway.Framework.Content\Bzway.Framework.Content.csproj", "{D257D947-F730-4F8E-AB29-54441941D73E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Module.MemberClub", "Modules\Bzway.Module.MemberClub\Bzway.Module.MemberClub.xproj", "{A537FF21-3384-4CF4-8621-E5E436F72226}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Module.MemberClub", "Modules\Bzway.Module.MemberClub\Bzway.Module.MemberClub.csproj", "{A537FF21-3384-4CF4-8621-E5E436F72226}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Module.Wechat", "Modules\Bzway.Module.Wechat\Bzway.Module.Wechat.xproj", "{D4CFBC00-7C31-475E-852A-1F209BDDB2AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Module.Wechat", "Modules\Bzway.Module.Wechat\Bzway.Module.Wechat.csproj", "{D4CFBC00-7C31-475E-852A-1F209BDDB2AC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Module.Publisher", "Modules\Bzway.Module.Publisher\Bzway.Module.Publisher.xproj", "{E492D755-424D-48BF-906F-0E22E6D7F327}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Module.Publisher", "Modules\Bzway.Module.Publisher\Bzway.Module.Publisher.csproj", "{E492D755-424D-48BF-906F-0E22E6D7F327}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Server.WechatMessage", "Server\Bzway.Wechat.MessageServer\Bzway.Server.WechatMessage.xproj", "{BB8B04E8-6790-4FA7-95E7-97E50765E64C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Server.WechatMessage", "Server\Bzway.Wechat.MessageServer\Bzway.Server.WechatMessage.csproj", "{BB8B04E8-6790-4FA7-95E7-97E50765E64C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Site.BackOffice", "Sites\Bzway.Site.BackOffice\Bzway.Site.BackOffice.xproj", "{710456CA-DE7E-467A-AA6A-BC1E7AE9A6FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Site.BackOffice", "Sites\Bzway.Site.BackOffice\Bzway.Site.BackOffice.csproj", "{710456CA-DE7E-467A-AA6A-BC1E7AE9A6FA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Site.FrontPage", "Sites\Bzway.Site.FrontPage\Bzway.Site.FrontPage.xproj", "{66203CB5-FB2F-408F-9991-2C8D1363AD6E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Site.FrontPage", "Sites\Bzway.Site.FrontPage\Bzway.Site.FrontPage.csproj", "{66203CB5-FB2F-408F-9991-2C8D1363AD6E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.Test", "Tests\Data.Test\Data.Test.xproj", "{DFB34B7A-F51E-487C-95D2-A9E572357E77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.Test", "Tests\Data.Test\Data.Test.csproj", "{DFB34B7A-F51E-487C-95D2-A9E572357E77}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Framework.Connect.Authentication", "Framework\Bzway.Framework.Connect.Authentication\Bzway.Framework.Connect.Authentication.xproj", "{ACB45E19-F520-4D0C-8916-B0CEB9C017FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Framework.Connect.Authentication", "Framework\Bzway.Framework.Connect.Authentication\Bzway.Framework.Connect.Authentication.csproj", "{ACB45E19-F520-4D0C-8916-B0CEB9C017FE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Site.OpenApi", "Sites\Bzway.Sites.OpenApi\Bzway.Site.OpenApi.xproj", "{815F0EA3-37F1-4EBD-8A38-9AB2ACE70852}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bzway.Sites.OpenApi", "Sites\Bzway.Sites.OpenApi\Bzway.Sites.OpenApi.csproj", "{815F0EA3-37F1-4EBD-8A38-9AB2ACE70852}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocBuilder", "Tests\DocBuilder\DocBuilder.csproj", "{F8561F04-D10F-4040-BC8B-F461F2AF6DBA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "Server\ConsoleApp1\ConsoleApp1.xproj", "{595601A2-9CFE-4AE0-B92F-B7D5D500AE18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "Server\ConsoleApp1\ConsoleApp1.csproj", "{595601A2-9CFE-4AE0-B92F-B7D5D500AE18}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
