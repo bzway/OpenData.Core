@@ -1,5 +1,6 @@
 ﻿using Bzway.Data.Core;
 using System;
+using System.ComponentModel;
 
 namespace Bzway.Module.Wechat.Entity
 {
@@ -85,7 +86,7 @@ namespace Bzway.Module.Wechat.Entity
     /// </summary>
     public enum WechatMaterialType
     {
-
+        [Description("所有")]
         All,
         /// <summary>
         /// 图片
@@ -105,6 +106,7 @@ namespace Bzway.Module.Wechat.Entity
         /// <summary>
         /// 图文
         /// </summary>
+        [Description("图文")]
         news
     }
 }

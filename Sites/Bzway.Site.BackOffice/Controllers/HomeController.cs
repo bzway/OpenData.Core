@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Bzway.Module.Wechat.Interface;
 using Microsoft.Extensions.Logging;
+using System.Threading;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -28,7 +29,6 @@ namespace Bzway.Site.BackOffice.Controllers
         {
             //this.wechatService.SyncMaterial();
             var list = this.wechatService.GetWechatMaterils();
-
             return View(list);
         }
     }
