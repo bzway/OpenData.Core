@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bzway.Module.Wechat.Model
 {
-       public class WechatGetMaterialCountResponseModel
+    public class WechatGetMaterialCountResponseModel
     {
         public int voice_count { get; set; }
         public int video_count { get; set; }

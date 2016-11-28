@@ -5,7 +5,7 @@ using System.Text;
 using Newtonsoft.Json;
 namespace Bzway.Module.Wechat.Model
 {
-    public class WechatGroup : ResponesMessage
+    public class WechatGroup : WechatBaseResponseModel
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int id { get; set; }
@@ -14,13 +14,13 @@ namespace Bzway.Module.Wechat.Model
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int count { get; set; }
     }
-    public class WechatGroupGroup : ResponesMessage
+    public class WechatGroupGroup : WechatBaseResponseModel
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public WechatGroup group { get; set; }
     }
 
-    public class WechatGroupList : ResponesMessage
+    public class WechatGroupList : WechatBaseResponseModel
     {
         [JsonProperty]
         public List<WechatGroup> groups { get; set; }

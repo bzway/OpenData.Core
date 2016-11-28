@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bzway.Module.Wechat.Model
 {
-    public class WeChatGetUserListResponseModel : ResponesMessage
+    public class WeChatGetUserListResponseModel : WechatBaseResponseModel
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int total { get; set; }

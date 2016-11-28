@@ -265,25 +265,6 @@ namespace Bzway.Module.Wechat.Service
             }
         }
 
-        public WechatBaseResponseModel ViewMaterial(string data)
-        {
-            try
-            {
-                var request = new WechatPostRequest() { functionName = "getPreview", data = data };
-
-                var state = Guid.NewGuid().ToString("N");
-
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
-
-                return respone;
-            }
-            catch (Exception ex)
-            {
-                this.logger.LogError("WechatServiceHelper.GetOnLineKFList{0}", ex);
-                return null;
-            }
-        }
-
         public WechatBaseResponseModel DeleteGroupMsg(string msgId)
         {
             try
@@ -416,13 +397,12 @@ namespace Bzway.Module.Wechat.Service
 
         #region 素材管理
 
-        public WechatBaseResponseModel CreateMaterial(MaterialModel material)
+        public WechatBaseResponseModel CreateNewsMaterial(WechatNewsMaterialCreateRequestModel newsMaterial)
         {
             try
             {
-                var request = new WechatPostRequest() { functionName = "createMaterial", data = material.ToString() };
-                var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
+                var state = "https://api.weixin.qq.com/cgi-bin/material/add_news?access_token=" + this.GetAccessToken();
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, newsMaterial.ToString()));
 
                 return respone;
             }
@@ -433,33 +413,45 @@ namespace Bzway.Module.Wechat.Service
             }
         }
 
-        public WechatGetMaterialResponseModel GetMaterial(string mediaId)
+        public WechatGetNewsMaterialResponseModel GetNewsMaterial(string mediaId)
         {
             try
             {
                 string data = "{\"media_id\":\"" + mediaId + "\"}";
-                var request = new WechatPostRequest() { functionName = "getMaterial", data = data };
-                var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatGetMaterialResponseModel>(this.WebGet(state, request.ToString()));
+                var url = "https://api.weixin.qq.com/cgi-bin/material/get_material?access_token=" + this.GetAccessToken();
+                var respone = JsonConvert.DeserializeObject<WechatGetNewsMaterialResponseModel>(this.WebGet(url, data));
 
                 return respone;
             }
             catch (Exception ex)
             {
-                this.logger.LogError("WechatServiceHelper.GetMaterial{0}", ex);
+                this.logger.LogError("WechatServiceHelper.GetNewsMaterial{0}", ex);
                 return null;
             }
         }
+        public WechatGetOtherMaterialResponseModel GetOtherMaterial(string mediaId)
+        {
+            try
+            {
+                string data = "{\"media_id\":\"" + mediaId + "\"}";
+                var url = "https://api.weixin.qq.com/cgi-bin/material/get_material?access_token=" + this.GetAccessToken();
+                var respone = JsonConvert.DeserializeObject<WechatGetOtherMaterialResponseModel>(this.WebGet(url, data));
 
+                return respone;
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError("WechatServiceHelper.GetOtherMaterial{0}", ex);
+                return null;
+            }
+        }
         public WechatBaseResponseModel DeleteMaterial(string mediaId)
         {
             try
             {
                 string data = "{\"media_id\":\"" + mediaId + "\"}";
-                var request = new WechatPostRequest() { functionName = "deleteMaterial", data = data };
-                var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
-
+                var state = "https://api.weixin.qq.com/cgi-bin/material/del_material?access_token=" + this.GetAccessToken();
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, data));
                 return respone;
             }
             catch (Exception ex)
@@ -469,13 +461,12 @@ namespace Bzway.Module.Wechat.Service
             }
         }
 
-        public WechatBaseResponseModel UpdateMaterial(MaterialUpdateModel material)
+        public WechatBaseResponseModel UpdateNewsMaterial(WechatNewsMaterialUpdateRequestModel material)
         {
             try
             {
-                var request = new WechatPostRequest() { functionName = "updateMaterial", data = material.ToString() };
-                var state = Guid.NewGuid().ToString("N");
-                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(state, request.ToString()));
+                var url = "https://api.weixin.qq.com/cgi-bin/material/update_news?access_token=" + this.GetAccessToken();
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(url, material.ToString()));
 
                 return respone;
             }
@@ -507,7 +498,7 @@ namespace Bzway.Module.Wechat.Service
         /// <param name="offset"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        public WechatGetMaterialListResponse GetMaterialList(string type, int offset, int count)
+        public WechatGetMaterialListResponseModel GetMaterialList(string type, int offset, int count)
         {
             try
             {
@@ -515,12 +506,124 @@ namespace Bzway.Module.Wechat.Service
                 var data = new { type = type, offset = offset, count = count };
                 var request = JsonConvert.SerializeObject(data);
                 var reuqest = this.WebGet(url, request);
-                var model = JsonConvert.DeserializeObject<WechatGetMaterialListResponse>(reuqest);
+                var model = JsonConvert.DeserializeObject<WechatGetMaterialListResponseModel>(reuqest);
                 return model;
             }
             catch (Exception ex)
             {
                 this.logger.LogError("WechatServiceHelper.GetMaterialList{0}", ex);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="wechatOpenId">openID or 微信号</param>
+        /// <param name="type">mpnews,text,voice,image,mpvideo,wxcard,</param>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public WechatBaseResponseModel PreviewNewsMaterial(string wechatOpenId, string type, string content)
+        {
+            try
+            {
+                var request = "{\"towxname\":\"" + wechatOpenId + "\", \"touser\":\"" + wechatOpenId + "\",\"mpnews\":{\"media_id\":\"" + content + "\"},\"msgtype\":\"mpnews\"}";
+
+                var url = "https://api.weixin.qq.com/cgi-bin/message/mass/preview?access_token=" + this.GetAccessToken();
+
+                var respone = JsonConvert.DeserializeObject<WechatBaseResponseModel>(this.WebGet(url, request.ToString()));
+
+                return respone;
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError("WechatServiceHelper.GetOnLineKFList{0}", ex);
+                return null;
+            }
+        }
+        /// <summary>
+        /// 上传图文消息内的图片获取URL
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public string UploadNewsMaterialImage(string filePath)
+        {
+            try
+            {
+                string url = "https://api.weixin.qq.com/cgi-bin/media/uploadimg?access_token=" + this.GetAccessToken();
+                using (var formDataContent = new MultipartFormDataContent())
+                {
+                    formDataContent.Add(new ByteArrayContent(File.ReadAllBytes(filePath)), "files", filePath);
+
+                    var result = webClient.PostAsync(url, formDataContent).Result.Content.ReadAsByteArrayAsync().Result;
+
+                    var response = JsonConvert.DeserializeObject<WechatUploadNewsMaterialImageResponseModel>(Encoding.UTF8.GetString(result));
+                    return response.url;
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError("WechatServiceHelper.uploadImg{0}", ex);
+                return null;
+            }
+        }
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="type">媒体文件类型，分别有图片（image）、语音（voice）、视频（video）和缩略图（thumb）</param>
+        /// <returns></returns>
+        public WechatCreateOtherMaterialResponseModel CreateOtherMaterial(string filePath, string type, string title, string introduction)
+        {
+            try
+            {
+                var accessToken = GetAccessToken();
+                string url = "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=" + accessToken + "&type=" + type;
+                using (var formDataContent = new MultipartFormDataContent())
+                {
+                    formDataContent.Add(new ByteArrayContent(File.ReadAllBytes(filePath)), "media", "test");
+                    if (!string.IsNullOrEmpty(title))
+                    {
+                        var data = "{\"title\":\"" + title + "\",\"introduction\":\"" + introduction + "\"}";
+                        formDataContent.Add(new System.Net.Http.StringContent(data), "description");
+                    }
+                    HttpResponseMessage response = webClient.PostAsync(url, formDataContent).Result;
+                    var result = Encoding.UTF8.GetString(response.Content.ReadAsByteArrayAsync().Result);
+
+                    return JsonConvert.DeserializeObject<WechatCreateOtherMaterialResponseModel>(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError("WechatServiceHelper.Upload{0}", ex);
+                return null;
+            }
+        }
+
+
+        /// <summary>
+        /// 媒体文件在后台保存时间为3天，即3天后media_id失效。
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="type">媒体文件类型，分别有图片（image）、语音（voice）、视频（video）和缩略图（thumb）</param>
+        /// <returns></returns>
+        public string UploadTemplateMaterial(string filePath, string type)
+        {
+            try
+            {
+                var accessToken = GetAccessToken();
+                string url = "https://api.weixin.qq.com/cgi-bin/media/upload?access_token=" + accessToken + "&type=" + type;
+                using (var formDataContent = new MultipartFormDataContent())
+                {
+                    formDataContent.Add(new ByteArrayContent(File.ReadAllBytes(filePath)), "files", "test");
+                    HttpResponseMessage response = webClient.PostAsync(url, formDataContent).Result;
+                    var result = response.Content.ReadAsByteArrayAsync().Result;
+                    return Convert.ToBase64String(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError("WechatServiceHelper.Upload{0}", ex);
                 return null;
             }
         }
@@ -1644,54 +1747,6 @@ namespace Bzway.Module.Wechat.Service
 
         #endregion
 
-        #region 微信上传
-        public async Task<string> UploadImg(string filePath)
-        {
-            try
-            {
-                var accessToken = GetAccessToken();
-                string url = "https://api.weixin.qq.com/cgi-bin/media/uploadimg?access_token=" + accessToken;
-                using (var formDataContent = new MultipartFormDataContent())
-                {
-                    formDataContent.Add(new ByteArrayContent(File.ReadAllBytes(filePath)), "files", "test");
-                    HttpResponseMessage response = await webClient.PostAsync(url, formDataContent);
-                    var result = await response.Content.ReadAsByteArrayAsync();
-                    return Convert.ToBase64String(result);
-                }
-            }
-            catch (Exception ex)
-            {
-                this.logger.LogError("WechatServiceHelper.uploadImg{0}", ex);
-                return null;
-            }
-        }
-        /// <summary>
-        /// 媒体文件在后台保存时间为3天，即3天后media_id失效。
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public async Task<string> Upload(string filePath, string type)
-        {
-            try
-            {
-                var accessToken = GetAccessToken();
-                string url = "https://api.weixin.qq.com/cgi-bin/media/upload?access_token=" + accessToken + "&type=" + type;
-                using (var formDataContent = new MultipartFormDataContent())
-                {
-                    formDataContent.Add(new ByteArrayContent(File.ReadAllBytes(filePath)), "files", "test");
-                    HttpResponseMessage response = await webClient.PostAsync(url, formDataContent);
-                    var result = await response.Content.ReadAsByteArrayAsync();
-                    return Convert.ToBase64String(result);
-                }
-            }
-            catch (Exception ex)
-            {
-                this.logger.LogError("WechatServiceHelper.Upload{0}", ex);
-                return null;
-            }
-        }
 
-        #endregion
     }
 }
