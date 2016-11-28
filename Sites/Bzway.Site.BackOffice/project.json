@@ -17,9 +17,10 @@
     "Bzway.Framework.Connect": "1.0.0-*",
     "Bzway.Framework.Content": "1.0.0-*",
     "Bzway.Module.Wechat": "1.0.0-*",
+    "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
     "Microsoft.ApplicationInsights.AspNetCore": "1.0.2",
     "Microsoft.AspNetCore.Diagnostics": "1.1.0",
-    "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": "1.1.0",
+    "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": "1.0.0",
     "Microsoft.AspNetCore.Http.Abstractions": "1.1.0",
     "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.1.0",
     "Microsoft.AspNetCore.Mvc": "1.1.0",
@@ -31,14 +32,19 @@
     "Microsoft.AspNetCore.Server.IISIntegration": "1.1.0",
     "Microsoft.AspNetCore.Server.IISIntegration.Tools": "1.0.0-preview2-final",
     "Microsoft.AspNetCore.Server.Kestrel": "1.1.0",
+    "Microsoft.AspNetCore.Session": "1.1.0",
     "Microsoft.AspNetCore.StaticFiles": "1.1.0",
     "Microsoft.DiaSymReader.Native": "1.5.0-beta1",
-    "Microsoft.EntityFrameworkCore.SqlServer": "1.1.0",
-    "Microsoft.EntityFrameworkCore.SqlServer.Design": "1.1.0",
+    "Microsoft.EntityFrameworkCore.SqlServer": "1.0.1",
+    "Microsoft.EntityFrameworkCore.SqlServer.Design": {
+      "type": "build",
+      "version": "1.0.1"
+    },
     "Microsoft.EntityFrameworkCore.Tools": {
       "type": "build",
-      "version":"1.1.0-preview4-final"
+      "version": "1.1.0-preview4-final"
     },
+
     "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.1.0",
     "Microsoft.Extensions.Configuration.FileExtensions": "1.1.0",
     "Microsoft.Extensions.Configuration.Json": "1.1.0",
@@ -49,8 +55,8 @@
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.1.0",
     "Microsoft.Extensions.SecretManager.Tools": "1.0.0-preview2-final",
     "Microsoft.NETCore.App": {
-      "version": "1.1.0",
-      "type": "platform"
+      "type": "platform",
+      "version": "1.1.0"
     },
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.1.0",
     "Microsoft.VisualStudio.Web.CodeGeneration.Tools": {
@@ -91,8 +97,10 @@
     "postpublish": [ "dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%" ]
   },
   "tools": {
+    "BundlerMinifier.Core": "2.0.238",
     "Microsoft.AspNetCore.Razor.Tools": "1.0.0-preview2-final",
     "Microsoft.AspNetCore.Server.IISIntegration.Tools": "1.0.0-preview2-final",
+    "Microsoft.DotNet.Watcher.Tools": "1.0.0-preview2-final",
     "Microsoft.EntityFrameworkCore.Tools": "1.0.0-preview2-final",
     "Microsoft.Extensions.SecretManager.Tools": "1.0.0-preview2-final",
     "Microsoft.VisualStudio.Web.CodeGeneration.Tools": {
@@ -100,8 +108,7 @@
         "portable-net45+win8"
       ],
       "version": "1.0.0-preview2-final"
-    },
-    "Microsoft.DotNet.Watcher.Tools": "1.0.0-preview2-final"
+    }
   },
   "userSecretsId": "aspnet-WebApplication1-d7df4ccf-2b01-4b6f-85ea-0a90448e9245"
 }

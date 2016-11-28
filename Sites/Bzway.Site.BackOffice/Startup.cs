@@ -47,7 +47,7 @@ namespace Bzway.Site.BackOffice
             services.AddLogging();
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
-
+            services.AddSession();
             services.AddMvc();
 
             // Add application services.
@@ -66,8 +66,9 @@ namespace Bzway.Site.BackOffice
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
+            app.UseStaticFiles();
             app.UseApplicationInsightsRequestTelemetry();
+            app.UseSession();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

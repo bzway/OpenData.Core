@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -54,7 +56,11 @@ namespace DocBuilder
 
                 this.textBox3.Text = ex.Message;
             }
-
+        }
+        public void Setting(string url, string data)
+        {
+            this.textBox1.Text = url.Trim();
+            this.textBox2.Text = data;
         }
 
         private void textBox3_TextChanged(object sender, EventArgs e)
@@ -70,6 +76,20 @@ namespace DocBuilder
             }
             catch (Exception ex)
             {
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                var file = openFileDialog1.FileName;
+
+                File.WriteAllText(file, JsonConvert.SerializeObject(new Webpost()
+                {
+                    Url = this.textBox1.Text,
+                    Data = this.textBox2.Text,
+                }));
             }
         }
     }

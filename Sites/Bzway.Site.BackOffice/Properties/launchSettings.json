@@ -18,7 +18,7 @@
     "Bzway.Site.BackOffice": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:5000",
+      "launchUrl": "http://localhost:1110",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
