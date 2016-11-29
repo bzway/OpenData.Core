@@ -27,4 +27,14 @@ for /f %%a in (./loglist.txt) do (
 )
 del /q loglist.txt
 endlocal
+
+dir project.lock.json /b /s >loglist.txt
+dir *.user /b /s >>loglist.txt
+setlocal enabledelayedexpansion
+for /f %%a in (./loglist.txt) do (
+	rd /s /q %%a
+)
+del /q loglist.txt
+endlocal
+
 rd /s /q Publish

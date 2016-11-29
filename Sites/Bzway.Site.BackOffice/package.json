@@ -3,8 +3,10 @@
   "name": "asp.net",
   "private": true,
   "devDependencies": {
-    "jquery": "3.1.1",
-    "bootstrap": "3.3.7",
-    "font-awesome": "4.7.0"
+    "gulp": "3.8.11",
+    "gulp-concat": "2.5.2",
+    "gulp-cssmin": "0.1.7",
+    "gulp-uglify": "1.2.0",
+    "rimraf": "2.2.8"
   }
 }
