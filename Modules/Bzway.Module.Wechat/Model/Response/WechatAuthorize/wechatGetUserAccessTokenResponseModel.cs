@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Bzway.Module.Wechat.Model
 {
 
-    public class wechatGetUserAccessTokenResponseModel : WechatBaseResponseModel
+    public class wechatGetUserAccessTokenResponseModel : Module.Wechat.WechatBaseResponseModel
     {
         [JsonProperty(PropertyName = "access_token")]
         public string accessToken { get; set; }

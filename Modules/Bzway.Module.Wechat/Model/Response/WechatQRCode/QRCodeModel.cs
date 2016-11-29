@@ -31,7 +31,7 @@ namespace Bzway.Module.Wechat.Model
         }
     }
 
-    public class WechatCreateQRCodeTicketResponseModel : ResponesMessage
+    public class WechatCreateQRCodeTicketResponseModel : WechatBaseResponseModel
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string ticket { get; set; }
@@ -40,7 +40,7 @@ namespace Bzway.Module.Wechat.Model
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string url { get; set; }
     }
-    public class WechatCreateFShortUrlResponseModel : ResponesMessage
+    public class WechatCreateFShortUrlResponseModel : WechatBaseResponseModel
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string action { get; set; }

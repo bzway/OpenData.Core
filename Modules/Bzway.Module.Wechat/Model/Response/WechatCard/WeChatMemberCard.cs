@@ -82,7 +82,7 @@ namespace Bzway.Module.Wechat.Model
     }
  
 
-    public class ResponsesCard : ResponesMessage
+    public class ResponsesCard : WechatBaseResponseModel
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string card_id { get; set; }
@@ -90,7 +90,7 @@ namespace Bzway.Module.Wechat.Model
         public bool send_check { get; set; }
     }
 
-    public class ConsumeCardResponse : ResponesMessage
+    public class ConsumeCardResponse : WechatBaseResponseModel
     {
         public cardItem card { get; set; }
         public class cardItem
@@ -102,7 +102,7 @@ namespace Bzway.Module.Wechat.Model
 
     }
 
-    public class DecryptCardResponse : ResponesMessage
+    public class DecryptCardResponse : WechatBaseResponseModel
     {
         public string code { get; set; }
     }

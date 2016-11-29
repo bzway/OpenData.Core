@@ -9,7 +9,7 @@ namespace Bzway.Module.Wechat.Model
 {
 
 
-    public class WechatGetMaterialListResponse
+    public class WechatGetMaterialListResponseModel
     {
         public int total_count { get; set; }
         public int item_count { get; set; }

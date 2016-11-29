@@ -14,7 +14,7 @@ namespace Bzway.Module.Wechat.Interface
         WechatBaseResponseModel CreateCards(string data);
         WechatBaseResponseModel CreateCustom(CustomModel custom);
         string CreateGroup(string name);
-        WechatBaseResponseModel CreateMaterial(MaterialModel material);
+        WechatBaseResponseModel CreateNewsMaterial(WechatNewsMaterialCreateRequestModel material);
         bool CreateMenu(WechatButtonMenu menu);
         WechatBaseResponseModel CreatePoi(PoiRequestModel model);
         WechatCreateQRCodeTicketResponseModel CreateQRCodeTicket(ActionModel qrCode);
@@ -40,9 +40,9 @@ namespace Bzway.Module.Wechat.Interface
         WechatGetInterfaceSummaryResponseModel GetInterfaceSummaryByHour(string start, string end);
         WechatGetJsapiTicketResponseModel GetJsApiTicket();
         WechatGetKFListResponseModel GetKFList();
-        WechatGetMaterialResponseModel GetMaterial(string mediaId);
+        WechatGetNewsMaterialResponseModel GetMaterial(string mediaId);
         WechatGetMaterialCountResponseModel GetMaterialCount();
-        WechatGetMaterialListResponse GetMaterialList(string type, int offset, int count);
+        WechatGetMaterialListResponseModel GetMaterialList(string type, int offset, int count);
         WechatBaseResponseModel GetMemberGroup(string openId);
         WechatBaseResponseModel GetMenu();
         MsgRecordModel GetMsgRecord(MsgRecordPostModel record);
@@ -84,12 +84,28 @@ namespace Bzway.Module.Wechat.Interface
         WechatBaseResponseModel UpdateCard(string data);
         WechatBaseResponseModel UpdateCustom(CustomModel custom);
         WechatBaseResponseModel UpdateGroup(int groupId, string groupName);
-        WechatBaseResponseModel UpdateMaterial(MaterialUpdateModel material);
+        WechatBaseResponseModel UpdateNewsMaterial(WechatNewsMaterialUpdateRequestModel material);
         WechatBaseResponseModel UpdatePoi(UpdatePoiResponseModel model);
         WechatBaseResponseModel UpdateRemark(string openId, string remark);
-        Task<string> Upload(string filePath, string type);
+        string UploadTemplateMaterial(string filePath, string type);
         WechatBaseResponseModel UploadCustomHeadImg(string filePath, string accountName);
-        Task<string> UploadImg(string filePath);
-        WechatBaseResponseModel ViewMaterial(string data);
+        string UploadNewsMaterialImage(string filePath);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="wechatOpenId">openID or 微信号</param>
+        /// <param name="type">mpnews,text,voice,image,mpvideo,wxcard,</param>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        WechatBaseResponseModel PreviewNewsMaterial(string wechatOpenId, string type, string content);
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="type">媒体文件类型，分别有图片（image）、语音（voice）、视频（video）和缩略图（thumb）</param>
+        /// <returns></returns>
+        WechatCreateOtherMaterialResponseModel CreateOtherMaterial(string filePath, string type, string title, string introduction);
+
     }
 }
