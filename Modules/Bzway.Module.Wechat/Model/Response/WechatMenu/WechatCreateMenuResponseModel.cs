@@ -2,6 +2,6 @@
 using System.Collections.Generic;
 namespace Bzway.Module.Wechat.Model
 {
-    public class WechatCreateMenuResponseModel : Module.Wechat.WechatBaseResponseModel
+    public class WechatCreateMenuResponseModel : WechatBaseResponseModel
     { }
 }

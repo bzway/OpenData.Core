@@ -85,6 +85,10 @@ namespace Bzway.Site.FrontPage
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
             app.UseMvc(routes =>
             {
+                //Wechat News
+                routes.MapRoute(
+                    name: "WechatNews",
+                    template: "{controller=Wechat}/{action=News}/{id?}");
                 //Front Page
                 routes.MapRoute(
                     name: "Page",
