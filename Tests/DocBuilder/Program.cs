@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -18,21 +19,8 @@ namespace DocBuilder
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            if (args.Length > 0)
-            {
-                foreach (var item in args)
-                {
-                    try
-                    {
-                        var json = JsonConvert.DeserializeObject<Webpost>(File.ReadAllText(item));
-                        var form = new Form2();
-                        form.Setting(json.Url, json.Data);
-                        form.ShowDialog();
-                    }
-                    catch { }
-                }
-            }
-            Application.Run(new Form2());
+           
+            Application.Run(new Form3());
         }
     }
     public class Webpost

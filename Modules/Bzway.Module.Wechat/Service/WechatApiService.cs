@@ -1733,6 +1733,11 @@ namespace Bzway.Module.Wechat.Service
             }
         }
 
+        public WechatGetNewsMaterialResponseModel GetMaterial(string mediaId)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         #region 微信连WIFI TODO

@@ -1,13 +1,17 @@
-﻿@model PagedList<Bzway.Module.Wechat.Entity.WechatMaterial>
+﻿@using System.Net.Http;
+@using System.Text;
 @{
-    ViewData["Title"] = "Home Page";
-}
-<table>
-    @foreach (var item in this.Model)
+    var url = "http://hq.sinajs.cn/?list=sh600566,sz002024";
+    var result = string.Empty;
+    using (HttpClient client = new HttpClient())
     {
-        <tr>
-            <td>@item.MediaId</td>
-            <td>@item.Type</td>
-        </tr>
+
+        using (var content = new StringContent("", Encoding.UTF32))
+        {
+            var buffer = client.PostAsync(url, content).Result.Content.ReadAsByteArrayAsync().Result;
+            result = Encoding.UTF32.GetString(buffer);
+        }
     }
-</table>
+
+}
+<div>@result</div>
