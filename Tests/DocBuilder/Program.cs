@@ -19,13 +19,8 @@ namespace DocBuilder
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-           
-            Application.Run(new Form3());
+
+            Application.Run(new Form1());
         }
-    }
-    public class Webpost
-    {
-        public string Url { get; set; }
-        public string Data { get; set; }
     }
 }
