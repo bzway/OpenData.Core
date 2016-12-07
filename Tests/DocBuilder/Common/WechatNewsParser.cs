@@ -24,7 +24,12 @@ namespace Bzway.Common.Share
         {
             get
             {
-                return "金融时报";
+                var node = doc.GetElementbyId("post-user");
+                if (node == null)
+                {
+                    return string.Empty;
+                }
+                return node.InnerText;
             }
         }
 
@@ -32,12 +37,12 @@ namespace Bzway.Common.Share
         {
             get
             {
-                var titleNode = doc.DocumentNode.SelectNodes("/html/head/title").FirstOrDefault();
+                var titleNode = doc.GetElementbyId("js_content");
                 if (titleNode == null)
                 {
-                    return "";
+                    return string.Empty;
                 }
-                return titleNode.InnerText;
+                return titleNode.InnerHtml;
             }
         }
 
@@ -45,12 +50,7 @@ namespace Bzway.Common.Share
         {
             get
             {
-                var descriptionNode = doc.DocumentNode.SelectNodes("/html/head/meta").Where(m => m.Attributes["name"].Value == "description").FirstOrDefault();
-                if (descriptionNode == null)
-                {
-                    return "";
-                }
-                return descriptionNode.Attributes["content"].Value;
+                return string.Empty;
             }
         }
 
@@ -70,12 +70,12 @@ namespace Bzway.Common.Share
         {
             get
             {
-                var node = doc.DocumentNode.SelectNodes("/html/body/div[7]/div/div[1]/div/div[1]/div[3]/figure").FirstOrDefault();
+                var node = doc.DocumentNode.SelectNodes("//*[@id=\"js_content\"]/*/img").FirstOrDefault();
                 if (node == null)
                 {
                     return "";
                 }
-                return node.GetAttributeValue("data-url", "");
+                return node.GetAttributeValue("data-src", "");
             }
         }
 
@@ -84,10 +84,10 @@ namespace Bzway.Common.Share
             get
             {
 
-                var node = doc.DocumentNode.SelectNodes("/html/body/div[7]/div/div[1]/div/div[1]/h1").FirstOrDefault();
+                var node = doc.DocumentNode.SelectNodes("/html/head/title").FirstOrDefault();
                 if (node == null)
                 {
-                    return "";
+                    return string.Empty;
                 }
                 return node.InnerText;
             }

@@ -15,6 +15,8 @@ namespace Bzway.Common.Share
         static ParserManager()
         {
             list.Add("www.ftchinese.com", m => { return new FTNewsParser(m); });
+
+            list.Add("mp.weixin.qq.com", m => { return new WechatNewsParser(m); });
         }
         public static INewsParser Get(string url)
         {
