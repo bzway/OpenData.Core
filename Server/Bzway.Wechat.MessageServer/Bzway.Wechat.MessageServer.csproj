@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFrameworks>net461;netstandard1.6</TargetFrameworks>
     <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
-    <AssemblyName>Bzway.Data.Sql</AssemblyName>
-    <PackageId>Bzway.Data.Sql</PackageId>
+    <AssemblyName>Bzway.Wechat.MessageServer</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <PackageId>Bzway.Wechat.MessageServer</PackageId>
     <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
     <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.6' ">$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
@@ -16,16 +17,21 @@
     <ProjectReference Include="..\..\Common\Bzway.Common.Script\Bzway.Common.Script.csproj" />
     <ProjectReference Include="..\..\Common\Bzway.Common.Share\Bzway.Common.Share.csproj" />
     <ProjectReference Include="..\..\Common\Bzway.Common.Utility\Bzway.Common.Utility.csproj" />
-    <ProjectReference Include="..\Bzway.Data.Core\Bzway.Data.Core.csproj" />
+    <ProjectReference Include="..\..\Data\Bzway.Data.Core\Bzway.Data.Core.csproj" />
+    <ProjectReference Include="..\..\Data\Bzway.Data.File\Bzway.Data.File.csproj" />
+    <ProjectReference Include="..\..\Data\Bzway.Data.Mongo\Bzway.Data.Mongo.csproj" />
+    <ProjectReference Include="..\..\Data\Bzway.Data.Sql\Bzway.Data.Sql.csproj" />
+    <ProjectReference Include="..\..\Modules\Bzway.Module.Wechat\Bzway.Module.Wechat.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.0.0" />
-    <PackageReference Include="Core" Version="1.0.0-*" />
-    <PackageReference Include="System.Data.Common" Version="4.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="1.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="1.1.1" />
+    <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+    <PackageReference Include="Topshelf" Version="4.0.3" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>

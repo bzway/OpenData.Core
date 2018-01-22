@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  bzway.sites.openapi:
+    image: bzway.sites.openapi
+    build:
+      context: ./Sites/Bzway.Sites.OpenApi
+      dockerfile: Dockerfile

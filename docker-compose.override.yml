@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  bzway.sites.openapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"

@@ -36,6 +36,7 @@ namespace Bzway.Common.Utility
             container = containerBuilder.Build();
             return new AutofacServiceProvider(container);
         }
+
         public AppEngine Register<I, T>(string Name = "")
         {
             if (string.IsNullOrEmpty(Name))
